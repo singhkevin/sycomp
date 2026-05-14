@@ -55,22 +55,22 @@ export function AddProductForm({ categories }: { categories: Category[] }) {
   return (
     <form onSubmit={handleSubmit} className="space-y-6">
       <div className="space-y-2">
-        <Label htmlFor="title" className="text-slate-300">Product Title</legend>
+        <Label htmlFor="title" className="text-slate-300">Product Title</Label>
         <Input id="title" name="title" required className="bg-slate-800 border-slate-700 text-slate-100" />
       </div>
 
       <div className="space-y-2">
-        <Label htmlFor="slug" className="text-slate-300">Slug (URL identifier)</legend>
+        <Label htmlFor="slug" className="text-slate-300">Slug (URL identifier)</Label>
         <Input id="slug" name="slug" required className="bg-slate-800 border-slate-700 text-slate-100" />
       </div>
 
       <div className="grid grid-cols-2 gap-4">
         <div className="space-y-2">
-          <Label htmlFor="price" className="text-slate-300">Base Price (USD)</legend>
+          <Label htmlFor="price" className="text-slate-300">Base Price (USD)</Label>
           <Input id="price" name="price" type="number" step="0.01" required className="bg-slate-800 border-slate-700 text-slate-100" />
         </div>
         <div className="space-y-2">
-          <Label htmlFor="categoryId" className="text-slate-300">Category</legend>
+          <Label htmlFor="categoryId" className="text-slate-300">Category</Label>
           <select 
             id="categoryId" 
             name="categoryId" 
@@ -85,12 +85,12 @@ export function AddProductForm({ categories }: { categories: Category[] }) {
       </div>
 
       <div className="space-y-2">
-        <Label htmlFor="imageUrl" className="text-slate-300">Image URL</legend>
+        <Label htmlFor="imageUrl" className="text-slate-300">Image URL</Label>
         <Input id="imageUrl" name="imageUrl" className="bg-slate-800 border-slate-700 text-slate-100" placeholder="https://..." />
       </div>
 
       <div className="space-y-2">
-        <Label htmlFor="description" className="text-slate-300">Description</legend>
+        <Label htmlFor="description" className="text-slate-300">Description</Label>
         <Textarea id="description" name="description" rows={4} className="bg-slate-800 border-slate-700 text-slate-100 resize-none" />
       </div>
 
