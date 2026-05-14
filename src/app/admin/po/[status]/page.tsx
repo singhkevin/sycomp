@@ -1,4 +1,5 @@
 import { prisma } from "@/lib/prisma";
+import Link from "next/link";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -80,9 +81,11 @@ export default async function AdminPOPage({
                       </td>
                       <td className="px-6 py-4 text-right">
                         <div className="flex items-center justify-end gap-3">
-                          <Button variant="ghost" size="sm" className="text-slate-300 hover:text-white">
-                            <Eye className="h-4 w-4" />
-                          </Button>
+                          <Link href={`/admin/po/details/${po.id}`}>
+                            <Button variant="ghost" size="sm" className="text-slate-300 hover:text-white">
+                              <Eye className="h-4 w-4" />
+                            </Button>
+                          </Link>
                           <POStatusActions poId={po.id} currentStatus={po.status} />
                         </div>
                       </td>

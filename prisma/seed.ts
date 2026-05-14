@@ -112,6 +112,13 @@ async function main() {
       poNumber: "PO-2026-001",
       status: "OPEN",
       total: 4500.00,
+      items: {
+        create: [
+          { productName: "MacBook Air M2", quantity: 3, unitPrice: 999.00, totalPrice: 2997.00 },
+          { productName: "Surface Pro 9", quantity: 1, unitPrice: 1099.99, totalPrice: 1099.99 },
+          { productName: "Office 365 License", quantity: 10, unitPrice: 40.30, totalPrice: 403.01 }
+        ]
+      }
     },
   });
 
@@ -122,6 +129,12 @@ async function main() {
       poNumber: "PO-2026-002",
       status: "IN_PROCESS",
       total: 12500.50,
+      items: {
+        create: [
+          { productName: "Enterprise Server Rack", quantity: 1, unitPrice: 12000.00, totalPrice: 12000.00 },
+          { productName: "Ethernet Cables (10pk)", quantity: 5, unitPrice: 100.10, totalPrice: 500.50 }
+        ]
+      }
     },
   });
 
@@ -132,6 +145,11 @@ async function main() {
       poNumber: "PO-2026-003",
       status: "CLOSED",
       total: 890.00,
+      items: {
+        create: [
+          { productName: "Logitech MX Master 3S", quantity: 5, unitPrice: 178.00, totalPrice: 890.00 }
+        ]
+      }
     },
   });
 
