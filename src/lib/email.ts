@@ -1,20 +1,20 @@
 import nodemailer from "nodemailer";
 
 const transporter = nodemailer.createTransport({
-  host: process.env.SMTP_HOST,
+  host: process.env.SMTP_HOST as string,
   port: parseInt(process.env.SMTP_PORT || "465"),
   secure: true,
   auth: {
-    user: process.env.SMTP_USER,
-    pass: process.env.SMTP_PASSWORD,
+    user: process.env.SMTP_USER as string,
+    pass: process.env.SMTP_PASSWORD as string,
   },
   tls: {
     rejectUnauthorized: false
   },
-  family: 4, // Force IPv4
+  family: 4,
   debug: true,
   logger: true
-});
+} as any);
 
 // Verify connection configuration
 transporter.verify(function (error, success) {
