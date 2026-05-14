@@ -9,12 +9,26 @@ const transporter = nodemailer.createTransport({
     pass: process.env.SMTP_PASSWORD as string,
   },
   tls: {
-    rejectUnauthorized: false
+    rejectUnauthorized: false,
+    // @ts-ignore
+    family: 4
   },
+  // @ts-ignore
   family: 4,
   debug: true,
   logger: true
 } as any);
+
+// Debug env variables
+console.log("SMTP Config Check:");
+console.log("- Host:", process.env.SMTP_HOST);
+console.log("- Port:", process.env.SMTP_PORT);
+console.log("- User:", process.env.SMTP_USER);
+const p = process.env.SMTP_PASSWORD || "";
+console.log("- Pass Length:", p.length);
+if (p.length > 0) {
+  console.log("- Pass Check:", p[0] + "***" + p[p.length-1]);
+}
 
 // Verify connection configuration
 transporter.verify(function (error, success) {
