@@ -3,16 +3,24 @@ import nodemailer from "nodemailer";
 const transporter = nodemailer.createTransport({
   host: process.env.SMTP_HOST,
   port: parseInt(process.env.SMTP_PORT || "465"),
-  secure: process.env.SMTP_PORT === "465",
+  secure: true, // Always true for 465
   auth: {
     user: process.env.SMTP_USER,
     pass: process.env.SMTP_PASSWORD,
   },
-  pool: true,
-  maxConnections: 1,
-  maxMessages: 100,
   tls: {
     rejectUnauthorized: false
+  },
+  debug: true,
+  logger: true
+});
+
+// Verify connection configuration
+transporter.verify(function (error, success) {
+  if (error) {
+    console.log("Transporter verification failed:", error);
+  } else {
+    console.log("Server is ready to take our messages");
   }
 });
 
