@@ -1,13 +1,19 @@
 import nodemailer from "nodemailer";
 
 const transporter = nodemailer.createTransport({
-  host: process.env.SMTP_HOST || "smtp.gmail.com",
+  host: process.env.SMTP_HOST,
   port: parseInt(process.env.SMTP_PORT || "465"),
-  secure: true,
+  secure: process.env.SMTP_PORT === "465",
   auth: {
     user: process.env.SMTP_USER,
     pass: process.env.SMTP_PASSWORD,
   },
+  pool: true,
+  maxConnections: 1,
+  maxMessages: 100,
+  tls: {
+    rejectUnauthorized: false
+  }
 });
 
 export const sendOTP = async (email: string, otp: string) => {
@@ -28,8 +34,8 @@ export const sendOTP = async (email: string, otp: string) => {
     });
     console.log("Message sent: %s", info.messageId);
     return { success: true };
-  } catch (error) {
-    console.error("Error sending email", error);
-    return { success: false, error: "Failed to send email" };
+  } catch (error: any) {
+    console.error("Error sending email:", error.message || error);
+    return { success: false, error: error.message || "Failed to send email" };
   }
 };
