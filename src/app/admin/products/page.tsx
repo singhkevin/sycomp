@@ -4,7 +4,8 @@ import { prisma } from "@/lib/prisma";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Plus, Edit, Trash2 } from "lucide-react";
+import { Plus, Edit } from "lucide-react";
+import { DeleteProductButton } from "@/components/admin/delete-product-button";
 
 export default async function AdminProductsPage() {
   const products = await prisma.product.findMany({
@@ -73,9 +74,7 @@ export default async function AdminProductsPage() {
                           <Button variant="ghost" size="icon" className="h-8 w-8 text-slate-400 hover:text-white">
                             <Edit className="h-4 w-4" />
                           </Button>
-                          <Button variant="ghost" size="icon" className="h-8 w-8 text-red-400 hover:text-red-300 hover:bg-red-950/50">
-                            <Trash2 className="h-4 w-4" />
-                          </Button>
+                          <DeleteProductButton productId={product.id} />
                         </div>
                       </td>
                     </tr>

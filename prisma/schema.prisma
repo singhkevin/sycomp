@@ -33,6 +33,7 @@ model User {
   
   cart      Cart?
   orders    Order[]
+  purchaseOrders PurchaseOrder[]
 }
 
 model Category {
@@ -116,6 +117,9 @@ model PurchaseOrder {
   poNumber  String   @unique
   status    POStatus @default(OPEN)
   total     Float
+  country   String   @default("US")
+  userId    String?
+  user      User?    @relation(fields: [userId], references: [id])
   items     PurchaseOrderItem[]
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt

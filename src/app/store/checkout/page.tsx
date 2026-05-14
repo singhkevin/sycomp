@@ -9,11 +9,13 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { createPurchaseOrder } from "@/lib/actions/po";
 
 export default function CheckoutPage() {
   const router = useRouter();
   const { items, getTotal, clearCart } = useCart();
   const formatPrice = useStoreSettings(state => state.formatPrice);
+  const country = useStoreSettings(state => state.country);
   const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState({
     email: "",
@@ -21,9 +23,6 @@ export default function CheckoutPage() {
     address: "",
     city: "",
     postalCode: "",
-    cardNumber: "",
-    expiry: "",
-    cvc: ""
   });
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -34,14 +33,26 @@ export default function CheckoutPage() {
     e.preventDefault();
     setLoading(true);
     
-    // Simulate API call to create order and process payment
-    console.log("Processing order for:", formData);
-    await new Promise(resolve => setTimeout(resolve, 1500));
+    const poData = {
+      country: country || "US",
+      total: getTotal(),
+      items: items.map(item => ({
+        productName: item.title,
+        quantity: item.quantity,
+        unitPrice: item.price,
+        totalPrice: item.price * item.quantity
+      }))
+    };
+
+    const res = await createPurchaseOrder(poData);
     
-    // Success: clear cart and redirect to orders
-    clearCart();
+    if (res.success) {
+      clearCart();
+      router.push("/store/orders?success=1");
+    } else {
+      alert(res.error || "Failed to raise Purchase Order");
+    }
     setLoading(false);
-    router.push("/store/orders?success=1");
   };
 
   if (items.length === 0) {
@@ -51,18 +62,18 @@ export default function CheckoutPage() {
 
   return (
     <div className="container mx-auto p-4 md:p-8 max-w-6xl">
-      <h1 className="text-3xl font-bold tracking-tight mb-8">Checkout</h1>
+      <h1 className="text-3xl font-bold tracking-tight mb-8">Raise Purchase Order</h1>
       
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
         <form onSubmit={handleCheckout} className="space-y-8">
           <Card>
             <CardHeader>
-              <CardTitle>Contact & Shipping</CardTitle>
+              <CardTitle>Procurement Details</CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="grid grid-cols-2 gap-4">
                 <div className="space-y-2 col-span-2">
-                  <Label htmlFor="email">Email</Label>
+                  <Label htmlFor="email">Work Email</Label>
                   <Input id="email" name="email" type="email" required onChange={handleInputChange} />
                 </div>
                 <div className="space-y-2 col-span-2">
@@ -70,7 +81,7 @@ export default function CheckoutPage() {
                   <Input id="fullName" name="fullName" required onChange={handleInputChange} />
                 </div>
                 <div className="space-y-2 col-span-2">
-                  <Label htmlFor="address">Address</Label>
+                  <Label htmlFor="address">Shipping Address</Label>
                   <Input id="address" name="address" required onChange={handleInputChange} />
                 </div>
                 <div className="space-y-2">
@@ -85,30 +96,13 @@ export default function CheckoutPage() {
             </CardContent>
           </Card>
 
-          <Card>
-            <CardHeader>
-              <CardTitle>Payment Method</CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <div className="space-y-2">
-                <Label htmlFor="cardNumber">Card Number</Label>
-                <Input id="cardNumber" name="cardNumber" placeholder="0000 0000 0000 0000" required onChange={handleInputChange} />
-              </div>
-              <div className="grid grid-cols-2 gap-4">
-                <div className="space-y-2">
-                  <Label htmlFor="expiry">Expiry Date</Label>
-                  <Input id="expiry" name="expiry" placeholder="MM/YY" required onChange={handleInputChange} />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="cvc">CVC</Label>
-                  <Input id="cvc" name="cvc" placeholder="123" required onChange={handleInputChange} />
-                </div>
-              </div>
-            </CardContent>
-          </Card>
+          <div className="bg-blue-50 border border-blue-200 p-4 rounded-lg text-sm text-blue-800">
+            <p className="font-medium mb-1">Procurement Mode</p>
+            <p>You are raising a formal Purchase Order. Our procurement team will review your request and contact you for payment processing.</p>
+          </div>
 
           <Button type="submit" size="lg" className="w-full text-lg" disabled={loading}>
-            {loading ? "Processing..." : `Pay ${formatPrice(getTotal())}`}
+            {loading ? "Processing..." : `Raise PO (${formatPrice(getTotal())})`}
           </Button>
         </form>
 

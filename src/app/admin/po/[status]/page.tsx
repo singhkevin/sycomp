@@ -17,10 +17,13 @@ const statusConfig = {
 
 export default async function AdminPOPage({
   params,
+  searchParams,
 }: {
   params: { status: string };
+  searchParams: { country?: string };
 }) {
   const { status } = await params;
+  const { country } = await searchParams;
   const config = statusConfig[status as keyof typeof statusConfig];
 
   if (!config) {
@@ -30,22 +33,47 @@ export default async function AdminPOPage({
   const Icon = config.icon;
 
   const purchaseOrders = await prisma.purchaseOrder.findMany({
-    where: { status: config.prismaStatus },
+    where: { 
+      status: config.prismaStatus,
+      ...(country ? { country } : {})
+    },
     orderBy: { createdAt: "desc" }
   });
 
+  const countries = ["US", "IN", "CA", "UK", "AU"];
+
   return (
     <div className="space-y-6">
-      <div className="flex items-center gap-3">
-        <div className="h-10 w-10 bg-slate-800 rounded-lg flex items-center justify-center">
-          <Icon className="h-5 w-5 text-blue-400" />
+      <div className="flex items-center justify-between">
+        <div className="flex items-center gap-3">
+          <div className="h-10 w-10 bg-slate-800 rounded-lg flex items-center justify-center">
+            <Icon className="h-5 w-5 text-blue-400" />
+          </div>
+          <h1 className="text-3xl font-bold tracking-tight">{config.title}</h1>
         </div>
-        <h1 className="text-3xl font-bold tracking-tight">{config.title}</h1>
+        
+        <div className="flex items-center gap-2 bg-slate-800 p-1 rounded-lg border border-slate-700">
+          <Link href={`/admin/po/${status}`}>
+            <Button variant={!country ? "secondary" : "ghost"} size="sm" className="h-8 px-3">
+              All
+            </Button>
+          </Link>
+          {countries.map(c => (
+            <Link key={c} href={`/admin/po/${status}?country=${c}`}>
+              <Button variant={country === c ? "secondary" : "ghost"} size="sm" className="h-8 px-3">
+                {c}
+              </Button>
+            </Link>
+          ))}
+        </div>
       </div>
 
       <Card className="bg-slate-900 border-slate-800">
         <CardHeader>
-          <CardTitle className="text-slate-50">Viewing {purchaseOrders.length} records</CardTitle>
+          <CardTitle className="text-slate-50 flex items-center justify-between">
+            <span>Viewing {purchaseOrders.length} records</span>
+            {country && <Badge variant="secondary" className="bg-blue-500/10 text-blue-400 border-blue-500/20">{country}</Badge>}
+          </CardTitle>
         </CardHeader>
         <CardContent>
           <div className="rounded-md border border-slate-800">

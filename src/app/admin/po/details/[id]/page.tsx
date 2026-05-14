@@ -54,6 +54,15 @@ export default async function PODetailsPage({
           <CardContent className="space-y-4">
             <div className="flex items-center justify-between">
               <div className="flex items-center text-slate-400 text-sm">
+                <Globe className="h-4 w-4 mr-2" />
+                Country
+              </div>
+              <Badge variant="secondary" className="bg-blue-500/10 text-blue-400 border-blue-500/20">
+                {po.country}
+              </Badge>
+            </div>
+            <div className="flex items-center justify-between">
+              <div className="flex items-center text-slate-400 text-sm">
                 <Calendar className="h-4 w-4 mr-2" />
                 Date
               </div>

@@ -112,6 +112,7 @@ async function main() {
       poNumber: "PO-2026-001",
       status: "OPEN",
       total: 4500.00,
+      country: "US",
       items: {
         create: [
           { productName: "MacBook Air M2", quantity: 3, unitPrice: 999.00, totalPrice: 2997.00 },
@@ -129,6 +130,7 @@ async function main() {
       poNumber: "PO-2026-002",
       status: "IN_PROCESS",
       total: 12500.50,
+      country: "IN",
       items: {
         create: [
           { productName: "Enterprise Server Rack", quantity: 1, unitPrice: 12000.00, totalPrice: 12000.00 },
@@ -145,6 +147,7 @@ async function main() {
       poNumber: "PO-2026-003",
       status: "CLOSED",
       total: 890.00,
+      country: "CA",
       items: {
         create: [
           { productName: "Logitech MX Master 3S", quantity: 5, unitPrice: 178.00, totalPrice: 890.00 }
