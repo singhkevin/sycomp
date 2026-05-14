@@ -83,5 +83,5 @@ export async function logout() {
   const { deleteSession } = await import("@/lib/session");
   await deleteSession();
   const { redirect } = await import("next/navigation");
-  redirect("/auth/login");
+  redirect("/login");
 }
