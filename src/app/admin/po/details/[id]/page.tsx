@@ -3,7 +3,7 @@ import { notFound } from "next/navigation";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { ChevronLeft, FileText, Calendar, DollarSign, Package } from "lucide-react";
+import { ChevronLeft, FileText, Calendar, DollarSign, Package, Globe } from "lucide-react";
 import Link from "next/link";
 import { POStatusActions } from "@/components/admin/po-status-actions";
 
