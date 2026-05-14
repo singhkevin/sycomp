@@ -78,3 +78,10 @@ export async function verifyOTP(email: string, otp: string) {
     return { success: false, error: "Failed to verify OTP" };
   }
 }
+
+export async function logout() {
+  const { deleteSession } = await import("@/lib/session");
+  await deleteSession();
+  const { redirect } = await import("next/navigation");
+  redirect("/auth/login");
+}

@@ -2,9 +2,10 @@
 
 import Link from "next/link";
 import { User } from "@prisma/client";
-import { ShoppingCart, User as UserIcon } from "lucide-react";
+import { ShoppingCart, User as UserIcon, LogOut } from "lucide-react";
 import { useCart } from "@/store/useCart";
 import { Button } from "@/components/ui/button";
+import { logout } from "@/lib/actions/auth";
 
 export function StoreNav({ user }: { user: User }) {
   const items = useCart((state) => state.items);
@@ -47,6 +48,15 @@ export function StoreNav({ user }: { user: User }) {
             <Link href="/store/orders">
               <UserIcon className="h-5 w-5" />
             </Link>
+          </Button>
+
+          <Button 
+            variant="ghost" 
+            size="icon" 
+            onClick={() => logout()}
+            className="text-slate-500 hover:text-red-600 hover:bg-red-50"
+          >
+            <LogOut className="h-5 w-5" />
           </Button>
         </div>
       </div>

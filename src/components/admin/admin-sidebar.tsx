@@ -9,8 +9,10 @@ import {
   ShoppingCart,
   FileText,
   AlertCircle,
-  Settings
+  Settings,
+  LogOut
 } from "lucide-react";
+import { logout } from "@/lib/actions/auth";
 
 const NAV_ITEMS = [
   { href: "/admin", label: "Dashboard", icon: LayoutDashboard },
@@ -54,6 +56,14 @@ export function AdminSidebar() {
               </Link>
             );
           })}
+          
+          <button
+            onClick={() => logout()}
+            className="w-full flex items-center gap-3 px-3 py-2 rounded-md transition-colors text-slate-400 hover:bg-red-950/30 hover:text-red-400 mt-4"
+          >
+            <LogOut className="h-5 w-5" />
+            <span className="font-medium text-sm">Logout</span>
+          </button>
         </nav>
       </div>
     </aside>
