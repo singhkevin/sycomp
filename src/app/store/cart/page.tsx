@@ -22,6 +22,27 @@ export default function CartPage() {
     return items.filter(item => (item.countryCode || "US") === selectedCountry);
   }, [items, selectedCountry]);
 
+  const otherMarkets = useMemo(() => {
+    const otherItems = items.filter(item => (item.countryCode || "US") !== selectedCountry);
+    const groups: Record<string, { code: string; count: number; total: number; country: any }> = {};
+    
+    otherItems.forEach(item => {
+      const code = item.countryCode || "US";
+      if (!groups[code]) {
+        groups[code] = { 
+          code,
+          count: 0, 
+          total: 0, 
+          country: COUNTRIES[code as CountryCode] || COUNTRIES.US 
+        };
+      }
+      groups[code].count += item.quantity;
+      groups[code].total += item.price * item.quantity;
+    });
+    
+    return Object.values(groups);
+  }, [items, selectedCountry]);
+
   const otherMarketsCount = items.length - currentCountryItems.length;
   
   const currentTotal = useMemo(() => {
@@ -122,12 +143,50 @@ export default function CartPage() {
             </div>
           )}
 
-          {otherMarketsCount > 0 && (
-            <div className="p-4 bg-slate-50 border border-slate-200 rounded-lg flex items-center justify-between">
-              <div className="text-sm text-slate-600">
-                You have <span className="font-bold text-slate-900">{otherMarketsCount}</span> other products in different regional carts.
+          {otherMarkets.length > 0 && (
+            <div className="bg-slate-50 border border-slate-200 rounded-xl overflow-hidden shadow-sm">
+              <div className="p-4 border-b border-slate-200 bg-slate-100/50 flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <Globe size={16} className="text-slate-400" />
+                  <span className="text-sm font-bold text-slate-700">Items in Other Regional Carts</span>
+                </div>
+                <span className="text-[10px] bg-white text-slate-500 border border-slate-200 px-2 py-0.5 rounded-full font-bold">
+                  {otherMarketsCount} TOTAL ITEMS
+                </span>
               </div>
-              <p className="text-xs text-slate-400 font-medium italic">Switch country to view them</p>
+              <div className="divide-y divide-slate-200">
+                {otherMarkets.map((market) => (
+                  <div key={market.code} className="p-4 flex items-center justify-between hover:bg-slate-100/30 transition-colors">
+                    <div className="flex items-center gap-4">
+                      <div className="text-2xl w-10 h-10 bg-white rounded-lg border border-slate-200 flex items-center justify-center shadow-sm">
+                        {market.country.flag}
+                      </div>
+                      <div>
+                        <div className="text-sm font-bold text-slate-900">{market.country.name} Market</div>
+                        <div className="text-xs text-slate-500 font-medium">
+                          {market.count} {market.count === 1 ? 'item' : 'items'} ready for checkout
+                        </div>
+                      </div>
+                    </div>
+                    <div className="text-right">
+                      <div className="text-sm font-bold text-slate-900">
+                        {formatPrice(market.total, market.code as CountryCode)}
+                      </div>
+                      <button 
+                        onClick={() => useStoreSettings.getState().setCountry(market.code as CountryCode)}
+                        className="text-[10px] text-blue-600 font-bold uppercase tracking-wider hover:underline mt-1"
+                      >
+                        Switch to Market
+                      </button>
+                    </div>
+                  </div>
+                ))}
+              </div>
+              <div className="p-3 bg-white/50 text-center">
+                <p className="text-[10px] text-slate-400 font-bold uppercase tracking-widest">
+                  Items are segmented by market for procurement compliance
+                </p>
+              </div>
             </div>
           )}
         </div>
