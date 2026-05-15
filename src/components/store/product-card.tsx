@@ -8,13 +8,20 @@ import { Button } from "@/components/ui/button";
 import { useCart } from "@/store/useCart";
 import { useStoreSettings } from "@/store/useStoreSettings";
 
+import { useEffect, useState } from "react";
+
 interface ProductCardProps {
   product: Product;
 }
 
 export function ProductCard({ product }: ProductCardProps) {
+  const [mounted, setMounted] = useState(false);
   const addItem = useCart((state) => state.addItem);
-  const formatPrice = useStoreSettings((state) => state.formatPrice);
+  const { formatPrice, country } = useStoreSettings();
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   const handleAddToCart = () => {
     addItem({
@@ -23,6 +30,7 @@ export function ProductCard({ product }: ProductCardProps) {
       price: product.price,
       quantity: 1,
       imageUrl: product.imageUrl || undefined,
+      countryCode: product.countryRestrictions[0],
     });
   };
 
@@ -41,6 +49,15 @@ export function ProductCard({ product }: ProductCardProps) {
           ) : (
             <div className="text-slate-400 text-4xl">📦</div>
           )}
+          
+          {/* Country Badge */}
+          <div className="absolute top-2 right-2 flex gap-1">
+            {product.countryRestrictions.map(country => (
+              <span key={country} className="bg-white/90 backdrop-blur-sm text-[10px] font-bold px-1.5 py-0.5 rounded border border-slate-200 shadow-sm text-slate-700">
+                {country}
+              </span>
+            ))}
+          </div>
         </div>
         <CardContent className="p-4">
           <h3 className="font-semibold text-lg line-clamp-1">{product.title}</h3>
@@ -48,7 +65,10 @@ export function ProductCard({ product }: ProductCardProps) {
             {product.description || "No description available."}
           </p>
           <div className="mt-3 text-xl font-bold text-slate-900">
-            {formatPrice(product.price)}
+            {mounted 
+              ? formatPrice(product.price, product.countryRestrictions[0] as any)
+              : `$${product.price.toFixed(2)}`
+            }
           </div>
         </CardContent>
       </Link>

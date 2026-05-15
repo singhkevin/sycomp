@@ -35,6 +35,7 @@ export default async function AdminProductsPage() {
                 <tr>
                   <th className="px-6 py-3 font-medium">Product</th>
                   <th className="px-6 py-3 font-medium">Category</th>
+                  <th className="px-6 py-3 font-medium">Market</th>
                   <th className="px-6 py-3 font-medium">Price</th>
                   <th className="px-6 py-3 font-medium">Inventory</th>
                   <th className="px-6 py-3 font-medium text-right">Actions</th>
@@ -43,7 +44,7 @@ export default async function AdminProductsPage() {
               <tbody className="divide-y divide-slate-800">
                 {products.length === 0 ? (
                   <tr>
-                    <td colSpan={5} className="px-6 py-8 text-center text-slate-500">
+                    <td colSpan={6} className="px-6 py-8 text-center text-slate-500">
                       No products found. Add your first product.
                     </td>
                   </tr>
@@ -65,14 +66,29 @@ export default async function AdminProductsPage() {
                           {product.category?.name || "Uncategorized"}
                         </Badge>
                       </td>
+                      <td className="px-6 py-4">
+                        <div className="flex gap-1">
+                          {product.countryRestrictions.length > 0 ? (
+                            product.countryRestrictions.map(country => (
+                              <Badge key={country} className="bg-blue-500/10 text-blue-400 border-blue-500/20">
+                                {country}
+                              </Badge>
+                            ))
+                          ) : (
+                            <span className="text-slate-500 text-xs italic">Global</span>
+                          )}
+                        </div>
+                      </td>
                       <td className="px-6 py-4">${product.price.toFixed(2)}</td>
                       <td className="px-6 py-4">
                         {product.inventory?.quantity || 0}
                       </td>
                       <td className="px-6 py-4 text-right">
                         <div className="flex justify-end gap-2">
-                          <Button variant="ghost" size="icon" className="h-8 w-8 text-slate-400 hover:text-white">
-                            <Edit className="h-4 w-4" />
+                          <Button variant="ghost" size="icon" className="h-8 w-8 text-slate-400 hover:text-white" asChild>
+                            <Link href={`/admin/products/edit/${product.id}`}>
+                              <Edit className="h-4 w-4" />
+                            </Link>
                           </Button>
                           <DeleteProductButton productId={product.id} />
                         </div>

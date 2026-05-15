@@ -6,9 +6,16 @@ import { useCart } from "@/store/useCart";
 import { Button } from "@/components/ui/button";
 import { useStoreSettings } from "@/store/useStoreSettings";
 
+import { useEffect, useState } from "react";
+
 export default function CartPage() {
+  const [mounted, setMounted] = useState(false);
   const { items, removeItem, updateQuantity, getTotal } = useCart();
-  const formatPrice = useStoreSettings(state => state.formatPrice);
+  const { formatPrice, country } = useStoreSettings();
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   if (items.length === 0) {
     return (
@@ -41,7 +48,9 @@ export default function CartPage() {
               <div className="flex-1 flex flex-col justify-between py-1">
                 <div className="flex justify-between items-start">
                   <h3 className="font-semibold text-slate-900 line-clamp-1">{item.title}</h3>
-                  <div className="font-bold whitespace-nowrap ml-4">{formatPrice(item.price * item.quantity)}</div>
+                  <div className="font-bold whitespace-nowrap ml-4">
+                    {mounted ? formatPrice(item.price * item.quantity, item.countryCode as any) : "..."}
+                  </div>
                 </div>
                 <div className="flex justify-between items-end mt-4">
                   <div className="flex items-center border rounded-md h-8">
@@ -64,7 +73,7 @@ export default function CartPage() {
             <div className="space-y-2 mb-4 pb-4 border-b">
               <div className="flex justify-between text-slate-600">
                 <span>Subtotal</span>
-                <span>{formatPrice(getTotal())}</span>
+                <span>{mounted ? formatPrice(getTotal()) : "..."}</span>
               </div>
               <div className="flex justify-between text-slate-600">
                 <span>Shipping</span>
@@ -73,7 +82,7 @@ export default function CartPage() {
             </div>
             <div className="flex justify-between font-bold text-lg mb-6">
               <span>Total</span>
-              <span>{formatPrice(getTotal())}</span>
+              <span>{mounted ? formatPrice(getTotal()) : "..."}</span>
             </div>
             <Button className="w-full" size="lg" asChild>
               <Link href="/store/checkout">Proceed to Checkout</Link>

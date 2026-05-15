@@ -7,14 +7,22 @@ import { updateUserCountry } from "@/lib/actions/user";
 import { useStoreSettings, CountryCode } from "@/store/useStoreSettings";
 
 const COUNTRIES = [
+  { code: "AU", name: "Australia", flag: "🇦🇺" },
+  { code: "CN", name: "China", flag: "🇨🇳" },
+  { code: "IN", name: "India", flag: "🇮🇳" },
+  { code: "JP", name: "Japan", flag: "🇯🇵" },
+  { code: "PH", name: "Philippines", flag: "🇵🇭" },
+  { code: "ZA", name: "South Africa", flag: "🇿🇦" },
+  { code: "TW", name: "Taiwan", flag: "🇹🇼" },
+  { code: "AE", name: "UAE", flag: "🇦🇪" },
   { code: "US", name: "United States", flag: "🇺🇸" },
   { code: "CA", name: "Canada", flag: "🇨🇦" },
-  { code: "UK", name: "United Kingdom", flag: "🇬🇧" },
-  { code: "IN", name: "India", flag: "🇮🇳" },
-  { code: "AU", name: "Australia", flag: "🇦🇺" },
 ];
 
+import { useRouter } from "next/navigation";
+
 export function CountryEnforcer({ currentCountry }: { currentCountry: string | null }) {
+  const router = useRouter();
   const [open, setOpen] = useState(!currentCountry);
   const [loading, setLoading] = useState(false);
   const [selected, setSelected] = useState<string | null>(currentCountry);
@@ -38,6 +46,7 @@ export function CountryEnforcer({ currentCountry }: { currentCountry: string | n
     if (res.success) {
       setStoreCountry(selected as CountryCode);
       setOpen(false);
+      router.refresh();
     }
     setLoading(false);
   };

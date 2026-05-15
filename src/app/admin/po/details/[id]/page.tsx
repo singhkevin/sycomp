@@ -10,7 +10,7 @@ import { POStatusActions } from "@/components/admin/po-status-actions";
 export default async function PODetailsPage({
   params,
 }: {
-  params: { id: string };
+  params: Promise<{ id: string }>;
 }) {
   const { id } = await params;
   

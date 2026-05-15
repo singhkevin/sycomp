@@ -7,6 +7,7 @@ export interface CartItem {
   price: number;
   quantity: number;
   imageUrl?: string;
+  countryCode?: string;
 }
 
 interface CartState {
@@ -15,7 +16,7 @@ interface CartState {
   removeItem: (id: string) => void;
   updateQuantity: (id: string, quantity: number) => void;
   clearCart: () => void;
-  getTotal: () => number;
+  getTotal: (currency?: string) => number;
 }
 
 export const useCart = create<CartState>()(

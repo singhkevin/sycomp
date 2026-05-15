@@ -12,16 +12,17 @@ export default async function StoreDashboard() {
     select: { country: true }
   });
 
-  // Fetch products that are either not restricted, or allowed in the user's country
-  // We can filter this simply by checking if countryRestrictions is empty or contains user.country
-  const allProducts = await prisma.product.findMany({
+  const selectedCountry = user?.country || "US";
+
+  // Fetch products for the user's selected country
+  const availableProducts = await prisma.product.findMany({
+    where: {
+      countryRestrictions: {
+        has: selectedCountry
+      }
+    },
     orderBy: { createdAt: "desc" }
   });
-
-  const availableProducts = allProducts.filter(p => 
-    p.countryRestrictions.length === 0 || 
-    (user?.country && p.countryRestrictions.includes(user.country))
-  );
 
   return (
     <div className="container mx-auto p-4 md:p-8">

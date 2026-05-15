@@ -19,7 +19,7 @@ export default async function AdminPOPage({
   params,
   searchParams,
 }: {
-  params: { status: string };
+  params: Promise<{ status: string }>;
   searchParams: { country?: string };
 }) {
   const { status } = await params;
