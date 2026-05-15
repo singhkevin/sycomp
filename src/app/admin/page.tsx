@@ -14,12 +14,13 @@ export default async function AdminDashboard() {
   
   const revenue = orders.reduce((acc, o) => acc + o.total, 0);
 
-  // Calculate spend breakdown by category
+  // Calculate spend breakdown by category with null safety
   const categorySpend: Record<string, number> = {};
   orders.forEach(order => {
-    order.items.forEach(item => {
-      const catName = item.product.category.name;
-      categorySpend[catName] = (categorySpend[catName] || 0) + (item.price * item.quantity);
+    order.items?.forEach(item => {
+      const catName = item.product?.category?.name || "Uncategorized";
+      const itemTotal = (item.price || 0) * (item.quantity || 0);
+      categorySpend[catName] = (categorySpend[catName] || 0) + itemTotal;
     });
   });
 
