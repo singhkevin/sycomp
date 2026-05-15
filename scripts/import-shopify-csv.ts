@@ -23,28 +23,26 @@ const countryMap: Record<string, string> = {
 };
 
 async function main() {
-  console.log("Starting CSV import...");
+  console.log("Starting CSV import into Unified Product model...");
   
   const csvDir = path.join(process.cwd(), "public", "shopify-market-csvs");
+  if (!fs.existsSync(csvDir)) {
+    console.error(`CSV directory not found: ${csvDir}`);
+    return;
+  }
+  
   const files = fs.readdirSync(csvDir).filter(f => f.endsWith(".csv"));
 
   for (const file of files) {
     console.log(`Processing file: ${file}`);
     const filePath = path.join(csvDir, file);
     
-    // Extract country name from filename, e.g., "shopify-india.csv" -> "india"
     const match = file.match(/shopify-(.+)\.csv/);
-    if (!match) {
-      console.warn(`Could not determine country from filename: ${file}, skipping.`);
-      continue;
-    }
+    if (!match) continue;
     
     const countryName = match[1];
     const countryCode = countryMap[countryName];
-    if (!countryCode) {
-      console.warn(`No country code mapping found for: ${countryName}, skipping.`);
-      continue;
-    }
+    if (!countryCode) continue;
 
     const fileContent = fs.readFileSync(filePath, "utf-8");
     const records = parse(fileContent, {
@@ -52,65 +50,72 @@ async function main() {
       skip_empty_lines: true,
       relax_column_count: true,
       bom: true,
-    });
-
-    console.log(`Found ${records.length} records in ${file}`);
+    }) as Record<string, string>[];
 
     for (const record of records) {
-      // Handle is required to uniquely identify the product base
       if (!record.Handle || !record.Title) continue;
 
-      // Determine category
       const categoryName = record["Product Category"] || record["Type"] || "General";
       const categorySlug = categoryName.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)+/g, '');
 
-      // Upsert Category
       const category = await prisma.category.upsert({
         where: { slug: categorySlug },
         update: {},
         create: { name: categoryName, slug: categorySlug },
       });
 
-      // Prepare product fields
-      // User requested separate products for each country, so append country code to slug
-      const productSlug = `${record.Handle}-${countryCode.toLowerCase()}`;
-      const price = parseFloat(record["Variant Price"]) || 0;
-      const imageUrl = record["Image Src"] || null;
-      const description = record["Body (HTML)"] || null;
-
-      // Upsert Product
-      const product = await prisma.product.upsert({
-        where: { slug: productSlug },
+      // 1. Upsert Master Product (Global Info)
+      const masterProduct = await prisma.product.upsert({
+        where: { slug: record.Handle },
         update: {
           title: record.Title,
-          description: description,
-          price: price,
-          imageUrl: imageUrl,
-          countryRestrictions: [countryCode],
+          description: record["Body (HTML)"] || null,
+          imageUrl: record["Image Src"] || null,
           categoryId: category.id,
         },
         create: {
           title: record.Title,
-          slug: productSlug,
-          description: description,
-          price: price,
-          imageUrl: imageUrl,
-          countryRestrictions: [countryCode],
+          slug: record.Handle,
+          description: record["Body (HTML)"] || null,
+          imageUrl: record["Image Src"] || null,
           categoryId: category.id,
         },
       });
 
-      // Upsert Inventory
+      // 2. Upsert ProductMarket Variation
+      const price = parseFloat(record["Variant Price"]) || 0;
+      const sku = record["Variant SKU"] || `${record.Handle}-${countryCode.toLowerCase()}`;
+
+      const marketVariation = await prisma.productMarket.upsert({
+        where: {
+          productId_country: {
+            productId: masterProduct.id,
+            country: countryCode,
+          }
+        },
+        update: {
+          price: price,
+          sku: sku,
+        },
+        create: {
+          productId: masterProduct.id,
+          country: countryCode,
+          price: price,
+          sku: sku,
+        },
+      });
+
+      // 3. Upsert Inventory for this specific variation
       const inventoryQty = parseInt(record["Variant Inventory Qty"], 10);
       const finalQty = isNaN(inventoryQty) ? 0 : inventoryQty;
 
       await prisma.inventory.upsert({
-        where: { productId: product.id },
+        where: { productMarketId: marketVariation.id },
         update: {
           quantity: finalQty,
         },
         create: {
-          productId: product.id,
+          productMarketId: marketVariation.id,
           quantity: finalQty,
           lowStockAlert: 5,
         },
@@ -120,7 +125,7 @@ async function main() {
     console.log(`Completed processing ${file}`);
   }
 
-  console.log("CSV import finished successfully.");
+  console.log("Unified CSV import finished successfully.");
 }
 
 main()

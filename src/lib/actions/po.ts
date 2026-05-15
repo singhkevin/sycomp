@@ -7,16 +7,44 @@ import { verifySession } from "@/lib/session";
 
 export async function updatePOStatus(poId: string, status: POStatus) {
   try {
+    const session = await verifySession();
+    if (!session?.userId) {
+      return { success: false, error: "Not authenticated" };
+    }
+
+    // Always verify role from DB — JWT may be stale
+    const user = await prisma.user.findUnique({
+      where: { id: session.userId },
+      select: { role: true },
+    });
+
+    if (!user || user.role !== "ADMIN") {
+      return { success: false, error: "Unauthorized: Admin access required" };
+    }
+
+    if (!poId) {
+      return { success: false, error: "Purchase Order ID is required" };
+    }
+
     await prisma.purchaseOrder.update({
       where: { id: poId },
       data: { status },
     });
     
+    console.log(`[PO UPDATE] ID: ${poId} | New Status: ${status}`);
+
+    // Revalidate multiple levels to ensure UI consistency
+    revalidatePath("/admin/po", "layout");
     revalidatePath("/admin/po/[status]", "page");
+    revalidatePath(`/admin/po/details/${poId}`, "page");
+    
     return { success: true };
   } catch (error) {
     console.error("Failed to update PO status:", error);
-    return { success: false, error: "Failed to update status" };
+    return { 
+      success: false, 
+      error: error instanceof Error ? error.message : "Failed to update status" 
+    };
   }
 }
 

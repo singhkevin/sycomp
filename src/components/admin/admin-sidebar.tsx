@@ -48,7 +48,7 @@ export function AdminSidebar() {
                 className={`flex items-center gap-3 px-3 py-2 rounded-md transition-colors ${
                   isActive 
                     ? "bg-blue-600 text-white" 
-                    : "text-slate-400 hover:bg-slate-800 hover:text-white"
+                    : "text-slate-300 hover:bg-slate-800 hover:text-white"
                 }`}
               >
                 <Icon className="h-5 w-5" />
@@ -59,7 +59,7 @@ export function AdminSidebar() {
           
           <button
             onClick={() => logout()}
-            className="w-full flex items-center gap-3 px-3 py-2 rounded-md transition-colors text-slate-400 hover:bg-red-950/30 hover:text-red-400 mt-4"
+            className="w-full flex items-center gap-3 px-3 py-2 rounded-md transition-colors text-slate-300 hover:bg-red-950/30 hover:text-red-400 mt-4"
           >
             <LogOut className="h-5 w-5" />
             <span className="font-medium text-sm">Logout</span>

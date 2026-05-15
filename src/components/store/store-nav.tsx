@@ -27,7 +27,18 @@ export function StoreNav({ user }: { user: User }) {
                 onClick={() => window.dispatchEvent(new CustomEvent("open-country-selector"))}
                 className="flex items-center gap-1.5 px-2 py-1 rounded hover:bg-slate-100 transition-colors border border-slate-200"
               >
-                <span>{user.country === "IN" ? "🇮🇳 India" : user.country === "US" ? "🇺🇸 USA" : user.country}</span>
+                <span>{({
+                  "IN": "🇮🇳 India",
+                  "AU": "🇦🇺 Australia",
+                  "CN": "🇨🇳 China",
+                  "JP": "🇯🇵 Japan",
+                  "PH": "🇵🇭 Philippines",
+                  "ZA": "🇿🇦 South Africa",
+                  "TW": "🇹🇼 Taiwan",
+                  "AE": "🇦🇪 UAE",
+                  "US": "🇺🇸 USA",
+                  "CA": "🇨🇦 Canada",
+                } as Record<string, string>)[user.country] ?? user.country}</span>
                 <span className="text-[10px] bg-slate-100 text-slate-500 px-1 rounded border">Change</span>
               </button>
             </div>
@@ -44,9 +55,10 @@ export function StoreNav({ user }: { user: User }) {
             </Link>
           </Button>
 
-          <Button variant="ghost" size="icon" asChild>
+          <Button variant="ghost" size="sm" asChild className="text-slate-600 gap-2">
             <Link href="/store/orders">
-              <UserIcon className="h-5 w-5" />
+              <UserIcon className="h-4 w-4" />
+              <span className="hidden sm:inline">My Orders</span>
             </Link>
           </Button>
 

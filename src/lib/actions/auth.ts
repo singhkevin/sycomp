@@ -18,27 +18,35 @@ export async function requestOTP(email: string, role: "USER" | "ADMIN") {
   const expiresAt = new Date(Date.now() + 10 * 60 * 1000); // 10 minutes
 
   try {
-    // Upsert user
-    await prisma.user.upsert({
-      where: { email },
-      update: {
-        otpCode: otp,
-        otpExpiresAt: expiresAt,
-        role: role, // In a real app, maybe don't blindly update role for existing users if they are admin
-      },
-      create: {
-        email,
-        role,
-        otpCode: otp,
-        otpExpiresAt: expiresAt,
-      },
-    });
+    // Check if user already exists
+    const existingUser = await prisma.user.findUnique({ where: { email } });
+
+    if (existingUser) {
+      // Only update OTP fields — NEVER overwrite the existing role
+      await prisma.user.update({
+        where: { email },
+        data: {
+          otpCode: otp,
+          otpExpiresAt: expiresAt,
+        },
+      });
+    } else {
+      // New user — create with the role from the login form
+      await prisma.user.create({
+        data: {
+          email,
+          role,
+          otpCode: otp,
+          otpExpiresAt: expiresAt,
+        },
+      });
+    }
 
     // Send email
     await sendOTP(email, otp);
     
     // In test environment, also log it
-    console.log(`[TEST OTP] Role: ${role} | Email: ${email} | OTP: ${otp}`);
+    console.log(`[TEST OTP] Role: ${existingUser?.role ?? role} | Email: ${email} | OTP: ${otp}`);
 
     return { success: true };
   } catch (error) {

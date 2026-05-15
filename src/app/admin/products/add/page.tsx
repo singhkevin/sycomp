@@ -1,6 +1,9 @@
 import { prisma } from "@/lib/prisma";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { ProductForm } from "@/components/admin/product-form";
+import { Button } from "@/components/ui/button";
+import { ChevronLeft } from "lucide-react";
+import Link from "next/link";
 
 export default async function AddProductPage() {
   const categories = await prisma.category.findMany();

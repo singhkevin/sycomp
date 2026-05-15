@@ -20,13 +20,11 @@ function DropdownMenuTrigger({
   className,
   ...props
 }: MenuPrimitive.Trigger.Props & { asChild?: boolean }) {
-  if (asChild) {
-    return <Slot data-slot="dropdown-menu-trigger" {...(props as any)} />
-  }
   return (
     <MenuPrimitive.Trigger 
       data-slot="dropdown-menu-trigger" 
       className={className as any} 
+      render={asChild ? <Slot /> : undefined}
       {...props} 
     />
   )

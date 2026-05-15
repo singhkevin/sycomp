@@ -2,31 +2,36 @@
 
 import { prisma } from "@/lib/prisma";
 import { revalidatePath } from "next/cache";
+import { stripHtml } from "@/lib/strip-html";
 
 export async function createProduct(data: {
   title: string;
   slug: string;
-  price: number;
   description: string;
   imageUrl: string;
   categoryId: string;
-  countryRestrictions: string[];
+  markets: { country: string; price: number; sku?: string; quantity: number }[];
 }) {
   try {
     const product = await prisma.product.create({
       data: {
         title: data.title,
         slug: data.slug,
-        price: data.price,
-        description: data.description,
+        description: stripHtml(data.description),
         imageUrl: data.imageUrl,
         categoryId: data.categoryId,
-        countryRestrictions: data.countryRestrictions,
-        inventory: {
-          create: {
-            quantity: 0,
-            lowStockAlert: 5
-          }
+        markets: {
+          create: data.markets.map(m => ({
+            country: m.country,
+            price: m.price,
+            sku: m.sku,
+            inventory: {
+              create: {
+                quantity: m.quantity,
+                lowStockAlert: 5
+              }
+            }
+          }))
         }
       }
     });
@@ -43,23 +48,38 @@ export async function createProduct(data: {
 export async function updateProduct(productId: string, data: {
   title: string;
   slug: string;
-  price: number;
   description: string;
   imageUrl: string;
   categoryId: string;
-  countryRestrictions: string[];
+  markets: { country: string; price: number; sku?: string; quantity: number }[];
 }) {
   try {
+    // Delete existing markets and recreate for simplicity (or we could upsert)
+    await prisma.productMarket.deleteMany({
+      where: { productId }
+    });
+
     const product = await prisma.product.update({
       where: { id: productId },
       data: {
         title: data.title,
         slug: data.slug,
-        price: data.price,
-        description: data.description,
+        description: stripHtml(data.description),
         imageUrl: data.imageUrl,
         categoryId: data.categoryId,
-        countryRestrictions: data.countryRestrictions,
+        markets: {
+          create: data.markets.map(m => ({
+            country: m.country,
+            price: m.price,
+            sku: m.sku,
+            inventory: {
+              create: {
+                quantity: m.quantity,
+                lowStockAlert: 5
+              }
+            }
+          }))
+        }
       }
     });
 

@@ -11,8 +11,10 @@ import {
   DropdownMenuTrigger 
 } from "@/components/ui/dropdown-menu";
 import { ChevronDown, Loader2 } from "lucide-react";
+import { useRouter } from "next/navigation";
 
 export function POStatusActions({ poId, currentStatus }: { poId: string, currentStatus: POStatus }) {
+  const router = useRouter();
   const [loading, setLoading] = useState(false);
 
   const handleUpdate = async (status: POStatus) => {
@@ -20,7 +22,9 @@ export function POStatusActions({ poId, currentStatus }: { poId: string, current
     setLoading(true);
     const result = await updatePOStatus(poId, status);
     if (!result.success) {
-      alert("Failed to update status");
+      alert(result.error || "Failed to update status");
+    } else {
+      router.refresh();
     }
     setLoading(false);
   };
@@ -45,7 +49,7 @@ export function POStatusActions({ poId, currentStatus }: { poId: string, current
           <DropdownMenuItem 
             key={status.value} 
             onClick={() => handleUpdate(status.value)}
-            className={`cursor-pointer hover:bg-slate-800 focus:bg-slate-800 ${currentStatus === status.value ? 'bg-slate-800 text-blue-400' : ''}`}
+            className={`cursor-pointer hover:bg-slate-800 hover:text-white focus:bg-slate-800 focus:text-white ${currentStatus === status.value ? 'bg-slate-800 text-blue-400' : ''}`}
           >
             {status.label}
           </DropdownMenuItem>

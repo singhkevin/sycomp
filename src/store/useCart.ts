@@ -2,12 +2,14 @@ import { create } from "zustand";
 import { persist } from "zustand/middleware";
 
 export interface CartItem {
-  id: string; // product id
+  id: string; // Master Product ID
+  marketId: string; // Specific ProductMarket ID
+  sku?: string;
   title: string;
   price: number;
   quantity: number;
   imageUrl?: string;
-  countryCode?: string;
+  countryCode: string;
 }
 
 interface CartState {
@@ -16,6 +18,7 @@ interface CartState {
   removeItem: (id: string) => void;
   updateQuantity: (id: string, quantity: number) => void;
   clearCart: () => void;
+  clearMarket: (countryCode: string) => void;
   getTotal: (currency?: string) => number;
 }
 
@@ -25,29 +28,32 @@ export const useCart = create<CartState>()(
       items: [],
       addItem: (item) => {
         const currentItems = get().items;
-        const existingItem = currentItems.find((i) => i.id === item.id);
+        const existingItem = currentItems.find((i) => i.marketId === item.marketId);
         
         if (existingItem) {
           set({
             items: currentItems.map((i) =>
-              i.id === item.id ? { ...i, quantity: i.quantity + item.quantity } : i
+              i.marketId === item.marketId ? { ...i, quantity: i.quantity + item.quantity } : i
             ),
           });
         } else {
           set({ items: [...currentItems, item] });
         }
       },
-      removeItem: (id) => {
-        set({ items: get().items.filter((i) => i.id !== id) });
+      removeItem: (marketId) => {
+        set({ items: get().items.filter((i) => i.marketId !== marketId) });
       },
-      updateQuantity: (id, quantity) => {
+      updateQuantity: (marketId, quantity) => {
         set({
           items: get().items.map((i) =>
-            i.id === id ? { ...i, quantity: Math.max(1, quantity) } : i
+            i.marketId === marketId ? { ...i, quantity: Math.max(1, quantity) } : i
           ),
         });
       },
       clearCart: () => set({ items: [] }),
+      clearMarket: (countryCode) => {
+        set({ items: get().items.filter((i) => (i.countryCode || "US") !== countryCode) });
+      },
       getTotal: () => {
         return get().items.reduce((total, item) => total + item.price * item.quantity, 0);
       },

@@ -1,88 +1,103 @@
 import { prisma } from "@/lib/prisma";
 import { verifySession } from "@/lib/session";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import Image from "next/image";
+import { redirect } from "next/navigation";
+import Link from "next/link";
+import { FileText, ChevronRight, Clock, CheckCircle2, AlertCircle, XCircle } from "lucide-react";
+import { format } from "date-fns";
+import { COUNTRIES } from "@/store/useStoreSettings";
 
-export default async function OrdersPage({
-  searchParams,
-}: {
-  searchParams: { success?: string };
-}) {
+const STATUS_CONFIG = {
+  OPEN: { color: "text-blue-600 bg-blue-50 border-blue-100", icon: Clock, label: "Open" },
+  IN_PROCESS: { color: "text-amber-600 bg-amber-50 border-amber-100", icon: Clock, label: "In Process" },
+  CLOSED: { color: "text-emerald-600 bg-emerald-50 border-emerald-100", icon: CheckCircle2, label: "Closed" },
+  CANCELLED: { color: "text-rose-600 bg-rose-50 border-rose-100", icon: XCircle, label: "Cancelled" },
+};
+
+export default async function OrdersPage() {
   const session = await verifySession();
   
-  if (!session?.userId) return null;
+  if (!session?.userId) {
+    redirect("/login");
+  }
 
-  const orders = await prisma.order.findMany({
+  const orders = await prisma.purchaseOrder.findMany({
     where: { userId: session.userId },
-    include: { items: { include: { product: true } } },
-    orderBy: { createdAt: "desc" }
+    orderBy: { createdAt: "desc" },
+    include: {
+      _count: {
+        select: { items: true }
+      }
+    }
   });
-
-  const isSuccess = searchParams.success === "1";
 
   return (
     <div className="container mx-auto p-4 md:p-8 max-w-5xl">
-      {isSuccess && (
-        <div className="mb-8 p-6 bg-green-50 border border-green-200 rounded-lg text-center">
-          <div className="text-4xl mb-4">🎉</div>
-          <h2 className="text-2xl font-bold text-green-800">Order Placed Successfully!</h2>
-          <p className="text-green-700 mt-2">Thank you for your purchase. Your order is being processed.</p>
-        </div>
-      )}
+      <div className="mb-8">
+        <h1 className="text-3xl font-bold tracking-tight text-slate-900">Purchase Orders</h1>
+        <p className="text-slate-500 mt-2">Track your procurement history and PO status.</p>
+      </div>
 
-      <h1 className="text-3xl font-bold tracking-tight mb-8">Order History</h1>
-      
       {orders.length === 0 ? (
-        <div className="text-center py-20 bg-white rounded-lg border border-dashed">
-          <div className="text-4xl mb-4">📝</div>
-          <h2 className="text-xl font-semibold text-slate-700">No orders yet</h2>
-          <p className="text-slate-500 mt-2">When you place an order, it will appear here.</p>
+        <div className="text-center py-20 bg-white rounded-2xl border border-dashed border-slate-300">
+          <div className="text-4xl mb-4">📜</div>
+          <h2 className="text-xl font-semibold text-slate-700">No orders found</h2>
+          <p className="text-slate-500 mt-2">You haven&apos;t raised any Purchase Orders yet.</p>
+          <Link href="/store" className="inline-block mt-6 text-blue-600 font-medium hover:underline">
+            Go to Catalogue
+          </Link>
         </div>
       ) : (
-        <div className="space-y-6">
-          {orders.map(order => (
-            <Card key={order.id}>
-              <CardHeader className="bg-slate-50 border-b pb-4">
-                <div className="flex justify-between items-center">
-                  <div>
-                    <CardTitle className="text-sm font-medium text-slate-500">Order Placed</CardTitle>
-                    <div className="text-slate-900 mt-1">{new Date(order.createdAt).toLocaleDateString()}</div>
+        <div className="space-y-4">
+          {orders.map((order) => {
+            const status = STATUS_CONFIG[order.status as keyof typeof STATUS_CONFIG];
+            const country = COUNTRIES[order.country as keyof typeof COUNTRIES] || COUNTRIES.US;
+            const StatusIcon = status.icon;
+
+            return (
+              <Link 
+                key={order.id} 
+                href={`/store/orders/${order.id}`}
+                className="block bg-white p-6 rounded-xl border border-slate-200 shadow-sm transition-all hover:shadow-md hover:border-blue-200 group"
+              >
+                <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+                  <div className="flex items-center gap-4">
+                    <div className={`h-12 w-12 rounded-lg flex items-center justify-center ${status.color.split(' ')[1]}`}>
+                      <FileText className={`h-6 w-6 ${status.color.split(' ')[0]}`} />
+                    </div>
+                    <div>
+                      <div className="flex items-center gap-2">
+                        <span className="font-bold text-slate-900">{order.poNumber}</span>
+                        <span className="text-xs text-slate-400">•</span>
+                        <span className="text-sm text-slate-500">{format(order.createdAt, "MMM d, yyyy")}</span>
+                      </div>
+                      <div className="flex items-center gap-2 mt-1">
+                        <span className="text-lg">{country.flag}</span>
+                        <span className="text-sm text-slate-600 font-medium">{order._count.items} Items</span>
+                      </div>
+                    </div>
                   </div>
-                  <div>
-                    <CardTitle className="text-sm font-medium text-slate-500">Total</CardTitle>
-                    <div className="text-slate-900 mt-1 font-bold">${order.total.toFixed(2)}</div>
-                  </div>
-                  <div>
-                    <Badge variant={order.status === "DELIVERED" ? "default" : "secondary"}>
-                      {order.status}
-                    </Badge>
+
+                  <div className="flex items-center justify-between md:justify-end gap-6">
+                    <div className="text-right">
+                      <div className="text-lg font-bold text-slate-900">
+                        {new Intl.NumberFormat('en-US', {
+                          style: 'currency',
+                          currency: country.currency
+                        }).format(order.total)}
+                      </div>
+                    </div>
+                    
+                    <div className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full border text-xs font-bold uppercase tracking-wider ${status.color}`}>
+                      <StatusIcon className="h-3.5 w-3.5" />
+                      {status.label}
+                    </div>
+
+                    <ChevronRight className="h-5 w-5 text-slate-300 group-hover:text-blue-500 transition-colors hidden md:block" />
                   </div>
                 </div>
-              </CardHeader>
-              <CardContent className="p-0">
-                <ul className="divide-y">
-                  {order.items.map(item => (
-                    <li key={item.id} className="p-4 flex items-center gap-4">
-                      <div className="w-16 h-16 bg-slate-50 rounded border relative flex items-center justify-center p-1 overflow-hidden">
-                        {item.product.imageUrl ? (
-                          <Image src={item.product.imageUrl} alt={item.product.title} fill className="object-contain p-1 mix-blend-multiply" />
-                        ) : (
-                          <span className="text-xl">📦</span>
-                        )}
-                      </div>
-                      <div className="flex-1">
-                        <h4 className="font-semibold text-slate-900 line-clamp-1">{item.product.title}</h4>
-                        <div className="text-sm text-slate-500 mt-1">
-                          Qty: {item.quantity} • ${item.price.toFixed(2)} each
-                        </div>
-                      </div>
-                    </li>
-                  ))}
-                </ul>
-              </CardContent>
-            </Card>
-          ))}
+              </Link>
+            );
+          })}
         </div>
       )}
     </div>

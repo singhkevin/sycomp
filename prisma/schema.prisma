@@ -44,22 +44,37 @@ model Category {
 }
 
 model Product {
-  id                 String   @id @default(cuid())
-  title              String
-  slug               String   @unique
-  description        String?
-  price              Float
-  imageUrl           String?
-  countryRestrictions String[] // Array of country codes e.g. ["US", "CA"]
-  createdAt          DateTime @default(now())
-  updatedAt          DateTime @updatedAt
+  id          String   @id @default(cuid())
+  title       String
+  slug        String   @unique
+  description String?
+  imageUrl    String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
   
-  categoryId         String
-  category           Category @relation(fields: [categoryId], references: [id])
+  categoryId  String
+  category    Category @relation(fields: [categoryId], references: [id])
   
-  inventory          Inventory?
-  cartItems          CartItem[]
-  orderItems         OrderItem[]
+  markets     ProductMarket[]
+  cartItems   CartItem[]
+  orderItems  OrderItem[]
+}
+
+model ProductMarket {
+  id         String   @id @default(cuid())
+  productId  String
+  product    Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+  
+  country    String   // e.g. "IN", "AU"
+  price      Float
+  sku        String?
+  
+  inventory  Inventory?
+
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  @@unique([productId, country])
 }
 
 model Inventory {
@@ -67,8 +82,8 @@ model Inventory {
   quantity       Int      @default(0)
   lowStockAlert  Int      @default(5)
   
-  productId      String   @unique
-  product        Product  @relation(fields: [productId], references: [id])
+  productMarketId String   @unique
+  productMarket   ProductMarket @relation(fields: [productMarketId], references: [id], onDelete: Cascade)
 }
 
 model Cart {
@@ -87,6 +102,10 @@ model CartItem {
   
   productId String
   product   Product  @relation(fields: [productId], references: [id])
+  
+  marketId  String?  // Optional for now to maintain compatibility
+  country   String   @default("US")
+  
   quantity  Int      @default(1)
 }
 
@@ -95,6 +114,7 @@ model Order {
   userId    String
   user      User     @relation(fields: [userId], references: [id])
   total     Float
+  country   String   @default("US")
   status    String   @default("PENDING") // e.g. PENDING, PAID, SHIPPED, DELIVERED
   createdAt DateTime @default(now())
   
@@ -108,6 +128,7 @@ model OrderItem {
   
   productId String
   product   Product  @relation(fields: [productId], references: [id])
+  marketId  String?
   quantity  Int
   price     Float
 }

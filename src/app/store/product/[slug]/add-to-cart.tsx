@@ -5,17 +5,20 @@ import { Product } from "@prisma/client";
 import { useCart } from "@/store/useCart";
 import { Button } from "@/components/ui/button";
 
-export function ProductAddToCart({ product }: { product: Product }) {
+export function ProductAddToCart({ product, market }: { product: any, market: any }) {
   const [quantity, setQuantity] = useState(1);
   const addItem = useCart((state) => state.addItem);
 
   const handleAdd = () => {
     addItem({
       id: product.id,
+      marketId: market.id,
+      sku: market.sku,
       title: product.title,
-      price: product.price,
+      price: market.price,
       quantity,
       imageUrl: product.imageUrl || undefined,
+      countryCode: market.country,
     });
   };
 

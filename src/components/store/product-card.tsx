@@ -7,6 +7,7 @@ import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { useCart } from "@/store/useCart";
 import { useStoreSettings } from "@/store/useStoreSettings";
+import { stripHtml } from "@/lib/strip-html";
 
 import { useEffect, useState } from "react";
 
@@ -14,10 +15,14 @@ interface ProductCardProps {
   product: Product;
 }
 
-export function ProductCard({ product }: ProductCardProps) {
+export function ProductCard({ product }: { product: any }) {
   const [mounted, setMounted] = useState(false);
   const addItem = useCart((state) => state.addItem);
-  const { formatPrice, country } = useStoreSettings();
+  const { formatPrice } = useStoreSettings();
+
+  const currentMarket = product.markets?.[0];
+  const price = currentMarket?.price || 0;
+  const countryCode = currentMarket?.country || "US";
 
   useEffect(() => {
     setMounted(true);
@@ -26,11 +31,12 @@ export function ProductCard({ product }: ProductCardProps) {
   const handleAddToCart = () => {
     addItem({
       id: product.id,
+      marketId: currentMarket.id,
       title: product.title,
-      price: product.price,
+      price: price,
       quantity: 1,
       imageUrl: product.imageUrl || undefined,
-      countryCode: product.countryRestrictions[0],
+      countryCode: countryCode,
     });
   };
 
@@ -52,22 +58,20 @@ export function ProductCard({ product }: ProductCardProps) {
           
           {/* Country Badge */}
           <div className="absolute top-2 right-2 flex gap-1">
-            {product.countryRestrictions.map(country => (
-              <span key={country} className="bg-white/90 backdrop-blur-sm text-[10px] font-bold px-1.5 py-0.5 rounded border border-slate-200 shadow-sm text-slate-700">
-                {country}
-              </span>
-            ))}
+            <span className="bg-white/90 backdrop-blur-sm text-[10px] font-bold px-1.5 py-0.5 rounded border border-slate-200 shadow-sm text-slate-700">
+              {countryCode}
+            </span>
           </div>
         </div>
         <CardContent className="p-4">
           <h3 className="font-semibold text-lg line-clamp-1">{product.title}</h3>
           <p className="text-sm text-slate-500 mt-1 line-clamp-2">
-            {product.description || "No description available."}
+            {stripHtml(product.description) || "No description available."}
           </p>
           <div className="mt-3 text-xl font-bold text-slate-900">
             {mounted 
-              ? formatPrice(product.price, product.countryRestrictions[0] as any)
-              : `$${product.price.toFixed(2)}`
+              ? formatPrice(price, countryCode as any)
+              : `$${price.toFixed(2)}`
             }
           </div>
         </CardContent>
