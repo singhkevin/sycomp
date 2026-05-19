@@ -13,7 +13,7 @@ export function CsvImportButton() {
       <Button
         variant="outline"
         onClick={() => setOpen(true)}
-        className="border-slate-700 text-slate-300 hover:text-white hover:bg-slate-800 hover:border-blue-500 gap-2"
+        className="border-slate-200 text-slate-600 hover:text-slate-900 hover:bg-slate-50 hover:border-slate-300 gap-2 shadow-sm"
       >
         <Upload className="h-4 w-4" />
         Import CSV

@@ -3,6 +3,7 @@ import { prisma } from "@/lib/prisma";
 import { redirect } from "next/navigation";
 import { AdminSidebar } from "@/components/admin/admin-sidebar";
 import { AdminHeader } from "@/components/admin/admin-header";
+import { Footer } from "@/components/footer";
 
 export default async function AdminLayout({
   children,
@@ -24,14 +25,17 @@ export default async function AdminLayout({
   }
 
   return (
-    <div className="flex min-h-screen bg-slate-950 text-slate-50 dark">
-      <AdminSidebar />
-      <div className="flex-1 flex flex-col min-w-0">
-        <AdminHeader user={user} />
-        <main className="flex-1 overflow-auto p-4 md:p-8">
-          {children}
-        </main>
+    <div className="flex flex-col min-h-screen bg-white text-slate-900">
+      <div className="flex flex-1 min-h-0">
+        <AdminSidebar />
+        <div className="flex-1 flex flex-col min-w-0">
+          <AdminHeader user={user} />
+          <main className="flex-1 p-4 md:p-8">
+            {children}
+          </main>
+        </div>
       </div>
+      <Footer />
     </div>
   );
 }

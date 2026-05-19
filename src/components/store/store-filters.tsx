@@ -39,7 +39,8 @@ export function StoreFilters({ categories }: StoreFiltersProps) {
   const activeSort = searchParams.get("sort") || "newest";
 
   return (
-    <div className="space-y-6 mb-8">
+    <div className="bg-slate-50/60 border border-slate-200/60 p-4 rounded-xl mb-8 shadow-sm space-y-4">
+      {/* Search & Sort Panel */}
       <div className="flex flex-col md:flex-row gap-4 items-center">
         <div className="relative flex-1 w-full">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
@@ -47,7 +48,7 @@ export function StoreFilters({ categories }: StoreFiltersProps) {
             placeholder="Search products..." 
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className="pl-10 bg-white border-slate-200 focus:ring-blue-500"
+            className="pl-10 bg-white border-slate-200 text-slate-900 placeholder:text-slate-400 focus-visible:ring-1 focus-visible:ring-slate-400 focus-visible:border-slate-300 shadow-sm"
           />
           {search && (
             <button 
@@ -61,7 +62,7 @@ export function StoreFilters({ categories }: StoreFiltersProps) {
 
         <div className="flex items-center gap-3 w-full md:w-auto">
           <select 
-            className="flex-1 md:flex-none px-4 py-2 rounded-lg bg-white border border-slate-200 text-slate-700 text-sm outline-none focus:ring-2 focus:ring-blue-500 h-10"
+            className="w-full md:w-auto px-4 py-2 rounded-lg bg-white border border-slate-200 text-slate-700 hover:text-slate-900 text-sm outline-none focus:border-slate-300 focus:ring-1 focus:ring-slate-400 h-10 shadow-sm transition-all cursor-pointer"
             value={activeSort}
             onChange={(e) => updateFilter("sort", e.target.value)}
           >
@@ -73,17 +74,18 @@ export function StoreFilters({ categories }: StoreFiltersProps) {
         </div>
       </div>
 
-      <div className="flex flex-wrap gap-2 items-center">
-        <div className="flex items-center gap-2 mr-2 text-sm font-medium text-slate-500">
-          <SlidersHorizontal className="h-4 w-4" />
+      {/* Categories Row */}
+      <div className="flex flex-wrap gap-2 items-center border-t border-slate-200/60 pt-3">
+        <div className="flex items-center gap-2 mr-2 text-sm font-semibold text-slate-700">
+          <SlidersHorizontal className="h-4 w-4 text-slate-400" />
           Categories:
         </div>
         <button
           onClick={() => updateFilter("category", "")}
-          className={`px-4 py-1.5 rounded-full text-sm font-medium transition-all ${
+          className={`px-4 py-1.5 rounded-full text-sm font-medium transition-all shadow-xs ${
             !activeCategory 
-              ? "bg-blue-600 text-white" 
-              : "bg-white border border-slate-200 text-slate-600 hover:border-blue-300"
+              ? "bg-[#1f4475] text-white shadow-sm" 
+              : "bg-white border border-slate-200 text-slate-600 hover:bg-slate-50 hover:text-slate-900 hover:border-slate-300"
           }`}
         >
           All
@@ -92,10 +94,10 @@ export function StoreFilters({ categories }: StoreFiltersProps) {
           <button
             key={c.id}
             onClick={() => updateFilter("category", c.slug)}
-            className={`px-4 py-1.5 rounded-full text-sm font-medium transition-all ${
+            className={`px-4 py-1.5 rounded-full text-sm font-medium transition-all shadow-xs ${
               activeCategory === c.slug
-                ? "bg-blue-600 text-white" 
-                : "bg-white border border-slate-200 text-slate-600 hover:border-blue-300"
+                ? "bg-[#1f4475] text-white shadow-sm" 
+                : "bg-white border border-slate-200 text-slate-600 hover:bg-slate-50 hover:text-slate-900 hover:border-slate-300"
             }`}
           >
             {c.name}

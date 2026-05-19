@@ -18,44 +18,44 @@ export default async function AdminCategoriesPage() {
         </Button>
       </div>
 
-      <Card className="bg-slate-900 border-slate-800">
+      <Card className="bg-[#1f4475] border-white/15 shadow-lg shadow-blue-950/10">
         <CardHeader>
-          <CardTitle className="text-slate-50">All Categories</CardTitle>
+          <CardTitle className="text-white font-bold">All Categories</CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="rounded-md border border-slate-800">
-            <table className="w-full text-sm text-left text-slate-300">
-              <thead className="text-xs text-slate-400 uppercase bg-slate-800/50">
+          <div className="rounded-md border border-white/10 overflow-hidden">
+            <table className="w-full text-sm text-left text-blue-100">
+              <thead className="text-xs text-blue-100/80 uppercase bg-white/5">
                 <tr>
-                  <th className="px-6 py-3 font-medium">Name</th>
-                  <th className="px-6 py-3 font-medium">Slug</th>
-                  <th className="px-6 py-3 font-medium">Products Count</th>
-                  <th className="px-6 py-3 font-medium text-right">Actions</th>
+                  <th className="px-6 py-3 font-semibold">Name</th>
+                  <th className="px-6 py-3 font-semibold">Slug</th>
+                  <th className="px-6 py-3 font-semibold">Products Count</th>
+                  <th className="px-6 py-3 font-semibold text-right">Actions</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-slate-800">
+              <tbody className="divide-y divide-white/10">
                 {categories.length === 0 ? (
                   <tr>
-                    <td colSpan={4} className="px-6 py-8 text-center text-slate-500">
+                    <td colSpan={4} className="px-6 py-8 text-center text-blue-200/60">
                       No categories found. Create one.
                     </td>
                   </tr>
                 ) : (
                   categories.map((category) => (
-                    <tr key={category.id} className="hover:bg-slate-800/50 transition-colors">
-                      <td className="px-6 py-4 font-medium text-slate-100">{category.name}</td>
-                      <td className="px-6 py-4 font-mono text-xs text-slate-400">{category.slug}</td>
+                    <tr key={category.id} className="hover:bg-white/5 transition-colors">
+                      <td className="px-6 py-4 font-medium text-white">{category.name}</td>
+                      <td className="px-6 py-4 font-mono text-xs text-blue-200/70">{category.slug}</td>
                       <td className="px-6 py-4">
-                        <div className="inline-flex items-center justify-center px-2 py-1 text-xs font-bold leading-none text-slate-100 bg-slate-800 rounded-full">
+                        <div className="inline-flex items-center justify-center px-2.5 py-1 text-xs font-bold leading-none text-white bg-white/10 rounded-full">
                           {category._count.products}
                         </div>
                       </td>
                       <td className="px-6 py-4 text-right">
                         <div className="flex justify-end gap-2">
-                          <Button variant="ghost" size="icon" className="h-8 w-8 text-slate-400 hover:text-white">
+                          <Button variant="ghost" size="icon" className="h-8 w-8 text-blue-200 hover:text-white hover:bg-white/10">
                             <Edit className="h-4 w-4" />
                           </Button>
-                          <Button variant="ghost" size="icon" className="h-8 w-8 text-red-400 hover:text-red-300 hover:bg-red-950/50">
+                          <Button variant="ghost" size="icon" className="h-8 w-8 text-red-300 hover:text-red-200 hover:bg-red-950/40">
                             <Trash2 className="h-4 w-4" />
                           </Button>
                         </div>

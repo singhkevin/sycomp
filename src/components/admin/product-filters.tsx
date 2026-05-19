@@ -33,42 +33,43 @@ export function ProductFilters({ categories }: { categories: Category[] }) {
   };
 
   return (
-    <div className="flex flex-col md:flex-row gap-4 mb-6">
-      <div className="relative flex-1">
+    <div className="flex flex-col md:flex-row items-center gap-3 bg-slate-50/60 border border-slate-200/60 p-2.5 rounded-xl mb-6 shadow-sm">
+      <div className="relative flex-1 w-full">
         <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
         <Input 
           placeholder="Search products..." 
           defaultValue={searchParams.get("q") || ""}
           onChange={(e) => {
-            // Debounce would be better, but for simplicity:
             const timeoutId = setTimeout(() => updateFilter("q", e.target.value), 500);
             return () => clearTimeout(timeoutId);
           }}
-          className="pl-10 bg-slate-800 border-slate-700 text-slate-100"
+          className="pl-10 bg-white border-slate-200 text-slate-900 placeholder:text-slate-400 focus-visible:ring-1 focus-visible:ring-slate-400 focus-visible:border-slate-300 shadow-sm"
         />
       </div>
 
-      <select 
-        className="px-4 py-2 rounded-lg bg-slate-800 border-slate-700 text-slate-100 text-sm outline-none focus:ring-2 focus:ring-blue-500 min-w-[150px]"
-        value={searchParams.get("market") || "IN"}
-        onChange={(e) => updateFilter("market", e.target.value)}
-      >
-        <option value="">All Markets</option>
-        {COUNTRIES.map(c => (
-          <option key={c.code} value={c.code}>{c.name}</option>
-        ))}
-      </select>
+      <div className="flex w-full md:w-auto items-center gap-2">
+        <select 
+          className="w-full md:w-auto px-4 py-2 rounded-lg bg-white border border-slate-200 text-slate-700 hover:text-slate-900 text-sm outline-none focus:border-slate-300 focus:ring-1 focus:ring-slate-400 min-w-[160px] shadow-sm transition-all cursor-pointer"
+          value={searchParams.get("market") || "IN"}
+          onChange={(e) => updateFilter("market", e.target.value)}
+        >
+          <option value="">All Markets</option>
+          {COUNTRIES.map(c => (
+            <option key={c.code} value={c.code}>{c.name}</option>
+          ))}
+        </select>
 
-      <select 
-        className="px-4 py-2 rounded-lg bg-slate-800 border-slate-700 text-slate-100 text-sm outline-none focus:ring-2 focus:ring-blue-500 min-w-[150px]"
-        value={searchParams.get("category") || ""}
-        onChange={(e) => updateFilter("category", e.target.value)}
-      >
-        <option value="">All Categories</option>
-        {categories.map(c => (
-          <option key={c.id} value={c.id}>{c.name}</option>
-        ))}
-      </select>
+        <select 
+          className="w-full md:w-auto px-4 py-2 rounded-lg bg-white border border-slate-200 text-slate-700 hover:text-slate-900 text-sm outline-none focus:border-slate-300 focus:ring-1 focus:ring-slate-400 min-w-[160px] shadow-sm transition-all cursor-pointer"
+          value={searchParams.get("category") || ""}
+          onChange={(e) => updateFilter("category", e.target.value)}
+        >
+          <option value="">All Categories</option>
+          {categories.map(c => (
+            <option key={c.id} value={c.id}>{c.name}</option>
+          ))}
+        </select>
+      </div>
     </div>
   );
 }

@@ -73,35 +73,35 @@ export default async function AdminProductsPage({
 
       <ProductFilters categories={categories} />
 
-      <Card className="bg-slate-900 border-slate-800">
+      <Card className="bg-[#1f4475] border-white/15 shadow-lg shadow-blue-950/10">
         <CardHeader>
-          <CardTitle className="text-slate-50">All Products</CardTitle>
+          <CardTitle className="text-white font-bold">All Products</CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="rounded-md border border-slate-800">
-            <table className="w-full text-sm text-left text-slate-300">
-              <thead className="text-xs text-slate-200 uppercase bg-slate-800">
+          <div className="rounded-md border border-white/10 overflow-hidden">
+            <table className="w-full text-sm text-left text-blue-100">
+              <thead className="text-xs text-blue-100/80 uppercase bg-white/5">
                 <tr>
-                  <th className="px-6 py-3 font-medium">Product</th>
-                  <th className="px-6 py-3 font-medium">Category</th>
-                  <th className="px-6 py-3 font-medium">Price</th>
-                  <th className="px-6 py-3 font-medium">Inventory</th>
-                  <th className="px-6 py-3 font-medium text-right">Actions</th>
+                  <th className="px-6 py-3 font-semibold">Product</th>
+                  <th className="px-6 py-3 font-semibold">Category</th>
+                  <th className="px-6 py-3 font-semibold">Price</th>
+                  <th className="px-6 py-3 font-semibold">Inventory</th>
+                  <th className="px-6 py-3 font-semibold text-right">Actions</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-slate-800">
+              <tbody className="divide-y divide-white/10">
                 {products.length === 0 ? (
                   <tr>
-                    <td colSpan={6} className="px-6 py-12 text-center text-slate-300">
+                    <td colSpan={6} className="px-6 py-12 text-center text-blue-200">
                       <p className="text-lg font-medium">No products found.</p>
-                      <p className="text-sm text-slate-500 mt-1">Add your first product or import via CSV to get started.</p>
+                      <p className="text-sm text-blue-200/60 mt-1">Add your first product or import via CSV to get started.</p>
                     </td>
                   </tr>
                 ) : (
                   products.map((product) => (
-                    <tr key={product.id} className="hover:bg-slate-800/50 transition-colors">
-                      <td className="px-6 py-4 font-medium text-slate-100 flex items-center gap-3">
-                        <div className="h-10 w-10 bg-slate-800 rounded flex items-center justify-center relative overflow-hidden">
+                    <tr key={product.id} className="hover:bg-white/5 transition-colors">
+                      <td className="px-6 py-4 font-medium text-white flex items-center gap-3">
+                        <div className="h-10 w-10 bg-white/10 rounded flex items-center justify-center relative overflow-hidden">
                           {product.imageUrl ? (
                             <Image src={product.imageUrl} alt={product.title} fill className="object-contain p-1" />
                           ) : (
@@ -111,11 +111,11 @@ export default async function AdminProductsPage({
                         {product.title}
                       </td>
                       <td className="px-6 py-4">
-                        <Badge variant="outline" className="text-blue-300 border-blue-500/30 bg-blue-500/5">
+                        <Badge variant="outline" className="text-white border-white/20 bg-white/10 whitespace-nowrap">
                           {product.category?.name || "Uncategorized"}
                         </Badge>
                       </td>
-                      <td className="px-6 py-4 text-slate-100 font-semibold whitespace-nowrap">
+                      <td className="px-6 py-4 text-white font-semibold whitespace-nowrap">
                         {product.markets.length > 0 ? (
                           (() => {
                             const formatter = new Intl.NumberFormat('en-US', {
@@ -134,12 +134,12 @@ export default async function AdminProductsPage({
                           })()
                         ) : "N/A"}
                       </td>
-                      <td className="px-6 py-4">
+                      <td className="px-6 py-4 text-blue-100">
                         {product.markets[0]?.inventory?.quantity || 0}
                       </td>
                       <td className="px-6 py-4 text-right">
                         <div className="flex justify-end gap-2">
-                          <Button variant="ghost" size="icon" className="h-8 w-8 text-slate-400 hover:text-white" asChild>
+                          <Button variant="ghost" size="icon" className="h-8 w-8 text-blue-200 hover:text-white hover:bg-white/10" asChild>
                             <Link href={`/admin/products/edit/${product.id}`}>
                               <Edit className="h-4 w-4" />
                             </Link>

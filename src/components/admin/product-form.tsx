@@ -109,74 +109,74 @@ export function ProductForm({ categories, initialData }: ProductFormProps) {
     <form onSubmit={handleSubmit} className="space-y-8">
       {/* Global Info */}
       <div className="space-y-4">
-        <h3 className="text-lg font-semibold text-slate-200 border-b border-slate-800 pb-2">Global Information</h3>
+        <h3 className="text-lg font-semibold text-white border-b border-white/15 pb-2">Global Information</h3>
         
         <div className="space-y-2">
-          <Label htmlFor="title" className="text-slate-300">Product Title</Label>
+          <Label htmlFor="title" className="text-blue-100 font-medium">Product Title</Label>
           <Input 
             id="title" 
             name="title" 
             defaultValue={initialData?.title} 
             required 
-            className="bg-slate-800 border-slate-700 text-slate-100" 
+            className="bg-white/10 border-white/20 text-white placeholder:text-blue-200/50 focus-visible:ring-1 focus-visible:ring-white focus-visible:border-white" 
           />
         </div>
 
         <div className="grid grid-cols-2 gap-4">
           <div className="space-y-2">
-            <Label htmlFor="slug" className="text-slate-300">Base Slug</Label>
+            <Label htmlFor="slug" className="text-blue-100 font-medium">Base Slug</Label>
             <Input 
               id="slug" 
               name="slug" 
               defaultValue={initialData?.slug} 
               required 
-              className="bg-slate-800 border-slate-700 text-slate-100" 
+              className="bg-white/10 border-white/20 text-white placeholder:text-blue-200/50 focus-visible:ring-1 focus-visible:ring-white focus-visible:border-white" 
             />
           </div>
           <div className="space-y-2">
-            <Label htmlFor="categoryId" className="text-slate-300">Category</Label>
+            <Label htmlFor="categoryId" className="text-blue-100 font-medium">Category</Label>
             <select 
               id="categoryId" 
               name="categoryId" 
               defaultValue={initialData?.categoryId || ""}
               required 
-              className="w-full h-10 px-3 rounded-lg bg-slate-800 border-slate-700 text-slate-100 text-sm outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full h-10 px-3 rounded-lg bg-white/10 border border-white/20 text-white text-sm outline-none focus:border-white focus:bg-white/15 cursor-pointer"
             >
-              <option value="" disabled>Select a category</option>
+              <option value="" disabled className="text-slate-800">Select a category</option>
               {categories.map(c => (
-                <option key={c.id} value={c.id}>{c.name}</option>
+                <option key={c.id} value={c.id} className="text-slate-800">{c.name}</option>
               ))}
             </select>
           </div>
         </div>
 
         <div className="space-y-2">
-          <Label htmlFor="imageUrl" className="text-slate-300">Global Image URL</Label>
+          <Label htmlFor="imageUrl" className="text-blue-100 font-medium">Global Image URL</Label>
           <Input 
             id="imageUrl" 
             name="imageUrl" 
             defaultValue={initialData?.imageUrl || ""} 
-            className="bg-slate-800 border-slate-700 text-slate-100" 
+            className="bg-white/10 border-white/20 text-white placeholder:text-blue-200/50 focus-visible:ring-1 focus-visible:ring-white focus-visible:border-white" 
             placeholder="https://..." 
           />
         </div>
 
         <div className="space-y-2">
-          <Label htmlFor="description" className="text-slate-300">Description</Label>
+          <Label htmlFor="description" className="text-blue-100 font-medium">Description</Label>
           <Textarea 
             id="description" 
             name="description" 
             defaultValue={initialData?.description || ""} 
             rows={4} 
-            className="bg-slate-800 border-slate-700 text-slate-100 resize-none" 
+            className="bg-white/10 border-white/20 text-white placeholder:text-blue-200/50 focus-visible:ring-1 focus-visible:ring-white focus-visible:border-white resize-none" 
           />
         </div>
       </div>
 
       {/* Market Variations */}
       <div className="space-y-4">
-        <h3 className="text-lg font-semibold text-slate-200 border-b border-slate-800 pb-2">Regional Pricing & Inventory</h3>
-        <p className="text-xs text-slate-500 italic">Select markets to enable them and provide local pricing/stock.</p>
+        <h3 className="text-lg font-semibold text-white border-b border-white/15 pb-2">Regional Pricing & Inventory</h3>
+        <p className="text-xs text-blue-200/70 italic">Select markets to enable them and provide local pricing/stock.</p>
         
         <div className="grid gap-4">
           {COUNTRIES.map(c => {
@@ -186,8 +186,8 @@ export function ProductForm({ categories, initialData }: ProductFormProps) {
                 key={c.code}
                 className={`p-4 rounded-xl border transition-all ${
                   settings.enabled 
-                    ? "bg-slate-800/50 border-blue-500/50" 
-                    : "bg-slate-900 border-slate-800 opacity-60"
+                    ? "bg-white/10 border-white/25 shadow-sm" 
+                    : "bg-white/5 border-white/10 opacity-60"
                 }`}
               >
                 <div className="flex items-center justify-between mb-4">
@@ -195,29 +195,29 @@ export function ProductForm({ categories, initialData }: ProductFormProps) {
                     <div 
                       onClick={() => toggleMarket(c.code)}
                       className={`w-10 h-6 rounded-full relative cursor-pointer transition-colors ${
-                        settings.enabled ? "bg-blue-600" : "bg-slate-700"
+                        settings.enabled ? "bg-emerald-500" : "bg-white/20"
                       }`}
                     >
                       <div className={`absolute top-1 w-4 h-4 rounded-full bg-white transition-all ${
                         settings.enabled ? "left-5" : "left-1"
                       }`} />
                     </div>
-                    <span className="font-medium text-slate-100 flex items-center gap-2">
-                      <Globe className="h-4 w-4 text-slate-400" />
+                    <span className="font-semibold text-white flex items-center gap-2">
+                      <Globe className="h-4 w-4 text-blue-200" />
                       {c.name} ({c.code})
                     </span>
                   </div>
                   {settings.enabled && (
-                    <Badge className="bg-blue-500/10 text-blue-400 border-blue-500/20">Active</Badge>
+                    <Badge className="bg-emerald-500/20 text-emerald-300 border-emerald-500/30">Active</Badge>
                   )}
                 </div>
 
                 {settings.enabled && (
                   <div className="grid grid-cols-2 gap-4 animate-in fade-in slide-in-from-top-2 duration-200">
                     <div className="space-y-2">
-                      <Label className="text-[10px] uppercase text-slate-500">Local Price</Label>
+                      <Label className="text-[10px] uppercase text-blue-200 font-semibold tracking-wider">Local Price</Label>
                       <div className="relative">
-                        <span className="absolute left-3 top-1/2 -translate-y-1/2 text-xs font-bold text-slate-400">
+                        <span className="absolute left-3 top-1/2 -translate-y-1/2 text-xs font-bold text-blue-200">
                           {c.currency}
                         </span>
                         <Input 
@@ -225,19 +225,19 @@ export function ProductForm({ categories, initialData }: ProductFormProps) {
                           step="0.01"
                           value={settings.price}
                           onChange={(e) => updateMarketValue(c.code, "price", parseFloat(e.target.value))}
-                          className="pl-12 bg-slate-900 border-slate-700 text-slate-100 h-9"
+                          className="pl-12 bg-white/10 border-white/20 text-white h-9 focus-visible:ring-1 focus-visible:ring-white focus-visible:border-white"
                         />
                       </div>
                     </div>
                     <div className="space-y-2">
-                      <Label className="text-[10px] uppercase text-slate-500">Inventory Stock</Label>
+                      <Label className="text-[10px] uppercase text-blue-200 font-semibold tracking-wider">Inventory Stock</Label>
                       <div className="relative">
-                        <Package className="absolute left-3 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-slate-400" />
+                        <Package className="absolute left-3 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-blue-200" />
                         <Input 
                           type="number" 
                           value={settings.quantity}
                           onChange={(e) => updateMarketValue(c.code, "quantity", parseInt(e.target.value))}
-                          className="pl-8 bg-slate-900 border-slate-700 text-slate-100 h-9"
+                          className="pl-8 bg-white/10 border-white/20 text-white h-9 focus-visible:ring-1 focus-visible:ring-white focus-visible:border-white"
                         />
                       </div>
                     </div>
@@ -249,7 +249,7 @@ export function ProductForm({ categories, initialData }: ProductFormProps) {
         </div>
       </div>
 
-      <Button type="submit" disabled={loading} className="w-full bg-blue-600 hover:bg-blue-700 text-white py-6 text-lg font-bold">
+      <Button type="submit" disabled={loading} className="w-full bg-white hover:bg-blue-50 text-[#1f4475] py-6 text-lg font-bold transition-all shadow-md">
         {loading ? "Saving Changes..." : initialData ? "Update Unified Product" : "Create Unified Product"}
       </Button>
     </form>

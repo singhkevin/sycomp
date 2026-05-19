@@ -127,3 +127,146 @@
     @apply font-sans;
   }
 }
+
+/* ==========================================================================
+   GLOBAL BRAND FOOTER STYLES (SHOPIFY COMING SOON LAYOUT)
+   ========================================================================== */
+
+.site-footer {
+    background-color: #1f4475;
+    color: #ffffff;
+    font-family: Arial, Helvetica, sans-serif;
+    width: 100%;
+}
+
+.footer-top {
+    max-width: 1400px;
+    width: 100%;
+    margin: 0 auto;
+    padding: 45px 40px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 40px;
+    flex-wrap: wrap;
+}
+
+.footer-logo img {
+    height: 50px;
+    width: auto;
+}
+
+.footer-nav {
+    display: flex;
+    gap: 28px;
+    flex-wrap: wrap;
+}
+
+.footer-nav a {
+    color: #ffffff;
+    text-decoration: none;
+    font-size: 15px;
+    font-weight: 500;
+    white-space: nowrap;
+}
+
+.footer-nav a:hover {
+    text-decoration: underline;
+}
+
+.footer-social {
+    display: flex;
+    gap: 14px;
+}
+
+.footer-social a {
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.15);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.footer-social img {
+    width: 25px;
+    height: 25px;
+    object-fit: contain;
+    display: block;
+}
+
+.footer-bottom {
+    border-top: 1px solid rgba(255, 255, 255, 0.25);
+    padding: 15px 40px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    max-width: 1400px;
+    width: 100%;
+    margin: 0 auto;
+    font-size: 14px;
+    flex-wrap: wrap;
+    gap: 20px;
+}
+
+.footer-bottom p {
+    font-size: 28px;
+}
+
+.footer-legal {
+    display: flex;
+    gap: 25px;
+}
+
+.footer-legal a {
+    color: #ffffff;
+    text-decoration: none;
+}
+
+.footer-legal a:hover {
+    text-decoration: underline;
+}
+
+/* RESPONSIVE LAYOUT */
+@media (max-width: 768px) {
+    .footer-top {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+        padding: 40px 20px 30px;
+        gap: 30px;
+    }
+
+    .footer-logo img {
+        height: 42px;
+    }
+
+    .footer-nav {
+        flex-direction: column;
+        gap: 18px;
+    }
+
+    .footer-nav a {
+        font-size: 16px;
+    }
+
+    .footer-social {
+        justify-content: center;
+        gap: 16px;
+        margin-top: 10px;
+    }
+
+    .footer-bottom {
+        flex-direction: column;
+        text-align: center;
+        padding: 25px 20px;
+        gap: 18px;
+    }
+
+    .footer-legal {
+        justify-content: center;
+        gap: 30px;
+        flex-wrap: wrap;
+    }
+}

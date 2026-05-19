@@ -12,17 +12,17 @@ export default async function AddProductPage() {
     <div className="space-y-6 max-w-2xl mx-auto">
       <div className="flex items-center gap-4">
         <Link href="/admin/products">
-          <Button variant="ghost" size="sm" className="text-slate-400 hover:text-white">
+          <Button variant="ghost" size="sm" className="text-slate-500 hover:text-slate-900 hover:bg-slate-100">
             <ChevronLeft className="h-4 w-4 mr-1" />
             Back to Products
           </Button>
         </Link>
         <h1 className="text-3xl font-bold tracking-tight">Add New Product</h1>
       </div>
-
-      <Card className="bg-slate-900 border-slate-800">
+ 
+      <Card className="bg-[#1f4475] border-white/15 shadow-lg shadow-blue-950/10">
         <CardHeader>
-          <CardTitle className="text-slate-50">Product Details</CardTitle>
+          <CardTitle className="text-white font-bold">Product Details</CardTitle>
         </CardHeader>
         <CardContent>
           <ProductForm categories={categories} />

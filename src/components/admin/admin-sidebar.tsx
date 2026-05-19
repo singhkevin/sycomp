@@ -28,11 +28,14 @@ export function AdminSidebar() {
   const pathname = usePathname();
 
   return (
-    <aside className="w-64 bg-slate-900 border-r border-slate-800 hidden md:flex flex-col">
-      <div className="h-16 flex items-center px-6 border-b border-slate-800">
+    <aside className="w-64 bg-slate-50 border-r border-slate-200 hidden md:flex flex-col">
+      <div className="h-16 flex items-center px-6 border-b border-slate-200">
         <div className="flex gap-2 items-center">
-          <div className="h-8 w-8 bg-blue-600 rounded-md"></div>
-          <span className="text-xl font-bold text-white tracking-tight">Sycomp Admin</span>
+          <img
+            src="https://cdn.shopify.com/s/files/1/0968/4595/5385/files/sycomp-logo-full-color_no_tag.png?v=1765973489"
+            alt="Sycomp Admin Logo"
+            className="h-10 w-auto object-contain"
+          />
         </div>
       </div>
       
@@ -47,8 +50,8 @@ export function AdminSidebar() {
                 href={item.href}
                 className={`flex items-center gap-3 px-3 py-2 rounded-md transition-colors ${
                   isActive 
-                    ? "bg-blue-600 text-white" 
-                    : "text-slate-300 hover:bg-slate-800 hover:text-white"
+                    ? "bg-slate-900 text-white" 
+                    : "text-slate-600 hover:bg-slate-200/50 hover:text-slate-900"
                 }`}
               >
                 <Icon className="h-5 w-5" />
@@ -59,7 +62,7 @@ export function AdminSidebar() {
           
           <button
             onClick={() => logout()}
-            className="w-full flex items-center gap-3 px-3 py-2 rounded-md transition-colors text-slate-300 hover:bg-red-950/30 hover:text-red-400 mt-4"
+            className="w-full flex items-center gap-3 px-3 py-2 rounded-md transition-colors text-slate-600 hover:bg-red-50 hover:text-red-600 mt-4"
           >
             <LogOut className="h-5 w-5" />
             <span className="font-medium text-sm">Logout</span>

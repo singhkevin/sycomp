@@ -14,10 +14,13 @@ export function StoreNav({ user }: { user: User }) {
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-white/95 backdrop-blur supports-[backdrop-filter]:bg-white/60">
       <div className="container mx-auto flex h-16 items-center px-4">
-        <div className="flex gap-2 items-center">
-          <div className="h-8 w-8 bg-blue-600 rounded-md"></div>
-          <Link href="/store" className="text-xl font-bold text-slate-900 tracking-tight">Sycomp</Link>
-        </div>
+        <Link href="/store" className="flex items-center">
+          <img
+            src="https://cdn.shopify.com/s/files/1/0968/4595/5385/files/sycomp-logo-full-color_no_tag.png?v=1765973489"
+            alt="Sycomp Logo"
+            className="h-10 w-auto object-contain"
+          />
+        </Link>
 
         <div className="ml-auto flex items-center space-x-4">
           {user.country && (

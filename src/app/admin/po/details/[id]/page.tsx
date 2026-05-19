@@ -30,101 +30,101 @@ export default async function PODetailsPage({
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-4">
           <Link href={`/admin/po/${po.status.toLowerCase().replace("_", "-")}`}>
-            <Button variant="ghost" size="sm" className="text-slate-400 hover:text-white">
+            <Button variant="ghost" size="sm" className="text-slate-500 hover:text-slate-900 hover:bg-slate-100">
               <ChevronLeft className="h-4 w-4 mr-1" />
               Back
             </Button>
           </Link>
-          <div className="h-10 w-10 bg-slate-800 rounded-lg flex items-center justify-center">
-            <FileText className="h-5 w-5 text-blue-400" />
+          <div className="h-10 w-10 bg-slate-100 border border-slate-200 rounded-lg flex items-center justify-center shadow-sm">
+            <FileText className="h-5 w-5 text-slate-700" />
           </div>
           <div>
-            <h1 className="text-2xl font-bold tracking-tight text-slate-50">{po.poNumber}</h1>
+            <h1 className="text-2xl font-bold tracking-tight text-slate-900">{po.poNumber}</h1>
             <p className="text-sm text-slate-500">Purchase Order Details</p>
           </div>
         </div>
         <POStatusActions poId={po.id} currentStatus={po.status} />
       </div>
-
+ 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <Card className="bg-slate-900 border-slate-800 md:col-span-1">
+        <Card className="bg-[#1f4475] border-white/15 shadow-lg shadow-blue-950/10 md:col-span-1">
           <CardHeader>
-            <CardTitle className="text-sm font-medium text-slate-400 uppercase tracking-wider">Summary</CardTitle>
+            <CardTitle className="text-sm font-semibold text-blue-100 uppercase tracking-wider">Summary</CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
             <div className="flex items-center justify-between">
-              <div className="flex items-center text-slate-400 text-sm">
+              <div className="flex items-center text-blue-200 text-sm">
                 <Globe className="h-4 w-4 mr-2" />
                 Country
               </div>
-              <Badge variant="secondary" className="bg-blue-500/10 text-blue-400 border-blue-500/20">
+              <Badge variant="secondary" className="bg-white/10 text-white border-white/20">
                 {po.country}
               </Badge>
             </div>
             <div className="flex items-center justify-between">
-              <div className="flex items-center text-slate-400 text-sm">
+              <div className="flex items-center text-blue-200 text-sm">
                 <Calendar className="h-4 w-4 mr-2" />
                 Date
               </div>
-              <span className="text-slate-100 font-medium">{new Date(po.createdAt).toLocaleDateString()}</span>
+              <span className="text-white font-medium">{new Date(po.createdAt).toLocaleDateString()}</span>
             </div>
             <div className="flex items-center justify-between">
-              <div className="flex items-center text-slate-400 text-sm">
+              <div className="flex items-center text-blue-200 text-sm">
                 <Package className="h-4 w-4 mr-2" />
                 Status
               </div>
-              <Badge variant="outline" className="text-blue-400 border-blue-900 bg-blue-950/50">
+              <Badge variant="outline" className="text-white border-white/20 bg-white/10 whitespace-nowrap">
                 {po.status}
               </Badge>
             </div>
-            <div className="flex items-center justify-between">
-              <div className="flex items-center text-slate-400 text-sm">
+            <div className="flex items-center justify-between border-t border-white/10 pt-4">
+              <div className="flex items-center text-blue-200 text-sm">
                 <DollarSign className="h-4 w-4 mr-2" />
                 Total Amount
               </div>
-              <span className="text-xl font-bold text-slate-50">${po.total.toFixed(2)}</span>
+              <span className="text-xl font-bold text-white">${po.total.toFixed(2)}</span>
             </div>
           </CardContent>
         </Card>
-
-        <Card className="bg-slate-900 border-slate-800 md:col-span-2">
+ 
+        <Card className="bg-[#1f4475] border-white/15 shadow-lg shadow-blue-950/10 md:col-span-2">
           <CardHeader>
-            <CardTitle className="text-sm font-medium text-slate-400 uppercase tracking-wider">Line Items</CardTitle>
+            <CardTitle className="text-sm font-semibold text-blue-100 uppercase tracking-wider">Line Items</CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="rounded-md border border-slate-800 overflow-hidden">
-              <table className="w-full text-sm text-left text-slate-300">
-                <thead className="text-xs text-slate-400 uppercase bg-slate-800/50">
+            <div className="rounded-md border border-white/10 overflow-hidden">
+              <table className="w-full text-sm text-left text-blue-100">
+                <thead className="text-xs text-blue-100/80 uppercase bg-white/5">
                   <tr>
-                    <th className="px-6 py-3 font-medium">Product Name</th>
-                    <th className="px-6 py-3 font-medium text-center">Quantity</th>
-                    <th className="px-6 py-3 font-medium text-right">Unit Price</th>
-                    <th className="px-6 py-3 font-medium text-right">Total</th>
+                    <th className="px-6 py-3 font-semibold">Product Name</th>
+                    <th className="px-6 py-3 font-semibold text-center">Quantity</th>
+                    <th className="px-6 py-3 font-semibold text-right">Unit Price</th>
+                    <th className="px-6 py-3 font-semibold text-right">Total</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-slate-800">
+                <tbody className="divide-y divide-white/10">
                   {po.items.map((item) => (
-                    <tr key={item.id} className="hover:bg-slate-800/20 transition-colors">
-                      <td className="px-6 py-4 font-medium text-slate-100">{item.productName}</td>
-                      <td className="px-6 py-4 text-center">{item.quantity}</td>
-                      <td className="px-6 py-4 text-right">${item.unitPrice.toFixed(2)}</td>
-                      <td className="px-6 py-4 text-right font-bold text-slate-200">
+                    <tr key={item.id} className="hover:bg-white/5 transition-colors">
+                      <td className="px-6 py-4 font-semibold text-white">{item.productName}</td>
+                      <td className="px-6 py-4 text-center text-blue-100">{item.quantity}</td>
+                      <td className="px-6 py-4 text-right text-blue-100">${item.unitPrice.toFixed(2)}</td>
+                      <td className="px-6 py-4 text-right font-semibold text-white">
                         ${item.totalPrice.toFixed(2)}
                       </td>
                     </tr>
                   ))}
                   {po.items.length === 0 && (
                     <tr>
-                      <td colSpan={4} className="px-6 py-8 text-center text-slate-500">
+                      <td colSpan={4} className="px-6 py-8 text-center text-blue-200/60">
                         No items found for this purchase order.
                       </td>
                     </tr>
                   )}
                 </tbody>
-                <tfoot className="bg-slate-800/30">
+                <tfoot className="bg-white/5">
                   <tr>
-                    <td colSpan={3} className="px-6 py-4 text-right font-medium text-slate-400">Total</td>
-                    <td className="px-6 py-4 text-right font-bold text-blue-400 text-lg">
+                    <td colSpan={3} className="px-6 py-4 text-right font-medium text-blue-200">Total</td>
+                    <td className="px-6 py-4 text-right font-bold text-white text-lg">
                       ${po.total.toFixed(2)}
                     </td>
                   </tr>

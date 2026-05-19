@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { requestOTP, verifyOTP } from "@/lib/actions/auth";
 import { Footer } from "@/components/footer";
 
-export default function LoginPage() {
+export default function AdminLoginPage() {
   const router = useRouter();
   const [email, setEmail] = useState("");
   const [otp, setOtp] = useState("");
@@ -21,12 +21,12 @@ export default function LoginPage() {
     setSuccessMsg("");
 
     try {
-      const res = await requestOTP(email, "USER");
+      const res = await requestOTP(email, "ADMIN");
       if (res.success) {
         setStep("OTP");
-        setSuccessMsg(`OTP sent successfully to ${email}`);
+        setSuccessMsg(`Admin OTP sent successfully to ${email}`);
       } else {
-        setError(res.error || "Failed to send OTP. Please check your email.");
+        setError(res.error || "Failed to send OTP. Please check your admin email.");
       }
     } catch (err) {
       console.error(err);
@@ -44,7 +44,6 @@ export default function LoginPage() {
     try {
       const res = await verifyOTP(email, otp);
       if (res.success) {
-        // Redirection as per backend logic
         if (res.role === "ADMIN") {
           router.push("/admin");
         } else {
@@ -494,13 +493,13 @@ export default function LoginPage() {
 
           {step === "EMAIL" ? (
             <>
-              <p>Please enter your email to receive a login OTP code.</p>
+              <p>Please enter your admin email to receive a login OTP code.</p>
               <form onSubmit={handleRequestOTP} className="password-form">
                 <div className="password-inline">
                   <input
                     type="email"
                     className="password-input"
-                    placeholder="Email address"
+                    placeholder="Admin Email address"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     required
@@ -514,7 +513,7 @@ export default function LoginPage() {
             </>
           ) : (
             <>
-              <p>Please enter the 6-digit OTP code sent to your email.</p>
+              <p>Please enter the 6-digit OTP code sent to your admin email.</p>
               <form onSubmit={handleVerifyOTP} className="password-form">
                 <div className="password-inline">
                   <input

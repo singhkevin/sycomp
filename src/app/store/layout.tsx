@@ -3,6 +3,7 @@ import { prisma } from "@/lib/prisma";
 import { redirect } from "next/navigation";
 import { StoreNav } from "@/components/store/store-nav";
 import { CountryEnforcer } from "@/components/store/country-enforcer";
+import { Footer } from "@/components/footer";
 
 export default async function StoreLayout({
   children,
@@ -25,12 +26,13 @@ export default async function StoreLayout({
   }
   
   return (
-    <div className="flex min-h-screen flex-col bg-slate-50">
+    <div className="flex min-h-screen flex-col bg-white">
       <StoreNav user={user} />
       <CountryEnforcer currentCountry={user.country} />
       <main className="flex-1">
         {children}
       </main>
+      <Footer />
     </div>
   );
 }
