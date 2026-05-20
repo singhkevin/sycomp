@@ -57,7 +57,12 @@ export default async function PODetailsPage({
                 <Globe className="h-4 w-4 mr-2" />
                 Country
               </div>
-              <Badge variant="secondary" className="bg-white/10 text-white border-white/20">
+              <Badge variant="secondary" className="bg-white/10 text-white border-white/20 flex items-center gap-1.5">
+                <img 
+                  src={`https://flagcdn.com/w40/${po.country.toLowerCase()}.png`}
+                  alt={`${po.country} flag`}
+                  className="h-3 w-4.5 object-cover rounded-sm border border-white/15 shadow-sm"
+                />
                 {po.country}
               </Badge>
             </div>

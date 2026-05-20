@@ -72,7 +72,16 @@ export default async function AdminPOPage({
         <CardHeader>
           <CardTitle className="text-white font-bold flex items-center justify-between">
             <span>Viewing {purchaseOrders.length} records</span>
-            {country && <Badge variant="secondary" className="bg-white/10 text-white border-white/20">{country}</Badge>}
+            {country && (
+              <Badge variant="secondary" className="bg-white/10 text-white border-white/20 flex items-center gap-1.5">
+                <img 
+                  src={`https://flagcdn.com/w40/${country.toLowerCase()}.png`}
+                  alt={`${country} flag`}
+                  className="h-3 w-4.5 object-cover rounded-sm border border-white/15 shadow-sm"
+                />
+                {country}
+              </Badge>
+            )}
           </CardTitle>
         </CardHeader>
         <CardContent>

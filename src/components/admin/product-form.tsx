@@ -203,7 +203,11 @@ export function ProductForm({ categories, initialData }: ProductFormProps) {
                       }`} />
                     </div>
                     <span className="font-semibold text-white flex items-center gap-2">
-                      <Globe className="h-4 w-4 text-blue-200" />
+                      <img 
+                        src={`https://flagcdn.com/w40/${c.code.toLowerCase()}.png`}
+                        alt={`${c.name} flag`}
+                        className="h-3.5 w-5 object-cover rounded-sm border border-white/15 shadow-sm"
+                      />
                       {c.name} ({c.code})
                     </span>
                   </div>
